@@ -1,4 +1,5 @@
 import { type ReactNode } from 'react';
+import { motion } from 'framer-motion';
 
 interface Props {
   value: number;
@@ -10,7 +11,7 @@ interface Props {
   height?: number;
 }
 
-// Barra de progreso glass con relleno gradiente y glow.
+// Barra de progreso glass con relleno gradiente y glow + jelly idle.
 export function Progress({ value, max, label, color, className, children, height = 10 }: Props) {
   const pct = max > 0 ? Math.min(100, Math.round((value / max) * 100)) : 0;
   const gradient = color || 'linear-gradient(90deg, #9B5CFF, #FF3D8D)';
@@ -32,12 +33,21 @@ export function Progress({ value, max, label, color, className, children, height
           backdropFilter: 'blur(8px)',
         }}
       >
-        <div
-          className="h-full rounded-full transition-all duration-700 ease-out"
+        <motion.div
+          className="h-full rounded-full"
+          animate={{
+            scaleX: [1, 1.003, 0.997, 1.001, 1],
+          }}
+          transition={{
+            duration: 3,
+            repeat: Infinity,
+            ease: 'easeInOut',
+          }}
           style={{
             width: `${pct}%`,
             background: gradient,
             boxShadow: `0 0 12px ${color ? 'rgba(155,92,255,0.5)' : 'rgba(155,92,255,0.5)'}`,
+            transformOrigin: 'left center',
           }}
         />
       </div>

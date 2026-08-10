@@ -1,4 +1,5 @@
 import { type ReactNode } from 'react';
+import { motion } from 'framer-motion';
 import { clsx } from 'clsx';
 
 interface Props {
@@ -21,7 +22,7 @@ const styles: Record<NonNullable<Props['variant']>, { bg: string; text: string; 
 export function Badge({ children, variant = 'default', className, glow = false }: Props) {
   const s = styles[variant];
   return (
-    <span
+    <motion.span
       className={clsx('inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-semibold', className)}
       style={{
         background: s.bg,
@@ -30,8 +31,17 @@ export function Badge({ children, variant = 'default', className, glow = false }
         boxShadow: glow ? `0 0 12px ${s.border}` : undefined,
         backdropFilter: 'blur(8px)',
       }}
+      animate={{
+        scale: [1, 1.05, 0.96, 1.02, 1],
+      }}
+      transition={{
+        duration: 3.5,
+        repeat: Infinity,
+        ease: 'easeInOut',
+        repeatDelay: 1.5,
+      }}
     >
       {children}
-    </span>
+    </motion.span>
   );
 }

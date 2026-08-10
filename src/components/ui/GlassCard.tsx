@@ -160,7 +160,7 @@ export function GlassCard({
     );
   }
 
-  // Interactive: full liquid physics
+  // Interactive: full liquid physics + jelly idle
   return (
     <motion.div
       ref={cardRef}
@@ -177,7 +177,22 @@ export function GlassCard({
       }}
       onClick={onClick}
       {...liquid.handlers}
-      animate={liquid.motionStyle}
+      animate={{
+        ...liquid.motionStyle,
+        // Jelly idle oscillation when not pressed
+        ...(liquid.state.isPressed ? {} : {
+          scaleX: [1, 1.006, 0.994, 1.003, 1],
+          scaleY: [1, 0.994, 1.006, 0.997, 1],
+        }),
+      }}
+      transition={liquid.state.isPressed
+        ? liquid.motionStyle.transition
+        : {
+            duration: 3.5,
+            repeat: Infinity,
+            ease: 'easeInOut',
+          }
+      }
       tabIndex={0}
       role={onClick ? 'button' : undefined}
     >

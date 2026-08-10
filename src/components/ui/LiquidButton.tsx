@@ -98,9 +98,15 @@ export function LiquidButton({
               filter: 'brightness(1.12)',
             }
       }
+      animate={{
+        // Jelly idle morph oscillation
+        scaleX: [1, 1.008, 0.992, 1.004, 1],
+        scaleY: [1, 0.992, 1.008, 0.996, 1],
+      }}
       transition={{
-        type: 'spring',
-        ...spring,
+        duration: 3,
+        repeat: Infinity,
+        ease: 'easeInOut',
       }}
     >
       {/* Sheen highlight */}

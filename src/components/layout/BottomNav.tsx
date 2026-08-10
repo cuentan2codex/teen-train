@@ -181,7 +181,19 @@ export function BottomNav() {
                   strokeWidth={isActive ? 2.5 : 2}
                 />
               </motion.div>
-              {it.label}
+              <motion.span
+                animate={{
+                  scale: isActive ? [1, 1.03, 0.98, 1] : 1,
+                }}
+                transition={{
+                  duration: 2.5,
+                  repeat: Infinity,
+                  ease: 'easeInOut',
+                  repeatDelay: 1,
+                }}
+              >
+                {it.label}
+              </motion.span>
             </NavLink>
           );
         })}

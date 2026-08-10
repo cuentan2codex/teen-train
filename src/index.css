@@ -441,6 +441,321 @@ body {
 .stagger-6 { animation: slide-up 0.5s var(--ease-smooth) 0.24s both; }
 
 /* ============================================================
+   JELLY / GELATINA — Animaciones idle para TODOS los elementos
+   ============================================================ */
+
+/* --- Keyframes de gelatina --- */
+
+/* Respiración sutil — escala 1→1.018→1 (cards, glass, containers) */
+@keyframes jelly-breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.018); }
+}
+
+/* Wobble con rotación — para iconos, badges, chips, avatars */
+@keyframes jelly-wobble {
+  0%, 100% { transform: rotate(0deg) scale(1); }
+  25% { transform: rotate(0.8deg) scale(1.012); }
+  75% { transform: rotate(-0.8deg) scale(1.012); }
+}
+
+/* Morph squash/stretch — para botones e inputs */
+@keyframes jelly-morph {
+  0%, 100% { transform: scaleX(1) scaleY(1); }
+  33% { transform: scaleX(1.012) scaleY(0.988); }
+  66% { transform: scaleX(0.988) scaleY(1.012); }
+}
+
+/* Jello clásico — para logo, hero, h1 */
+@keyframes jelly-jello {
+  0%, 100% { transform: scale(1, 1); }
+  25% { transform: scale(0.98, 1.02); }
+  50% { transform: scale(1.02, 0.98); }
+  75% { transform: scale(0.99, 1.01); }
+}
+
+/* Ripple de escala sutil — para nav items, links */
+@keyframes jelly-ripple {
+  0%, 100% { transform: scale(1); }
+  30% { transform: scale(1.025); }
+  60% { transform: scale(0.985); }
+}
+
+/* Float gelatinoso con squash — para blobs, hero icon */
+@keyframes jelly-float {
+  0%, 100% { transform: translateY(0) scaleX(1) scaleY(1); }
+  25% { transform: translateY(-3px) scaleX(1.01) scaleY(0.99); }
+  50% { transform: translateY(-5px) scaleX(0.99) scaleY(1.01); }
+  75% { transform: translateY(-2px) scaleX(1.005) scaleY(0.995); }
+}
+
+/* Pulse glow con jelly — para elementos con glow */
+@keyframes jelly-glow {
+  0%, 100% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+  50% {
+    transform: scale(1.02);
+    filter: brightness(1.06);
+  }
+}
+
+/* Jiggle hover — se activa solo en :hover */
+@keyframes jelly-jiggle {
+  0% { transform: rotate(0deg); }
+  25% { transform: rotate(2deg); }
+  50% { transform: rotate(-2deg); }
+  75% { transform: rotate(1deg); }
+  100% { transform: rotate(0deg); }
+}
+
+/* Bounce settle — para elementos que aparecen */
+@keyframes jelly-settle {
+  0% { transform: scale(0.95); }
+  40% { transform: scale(1.04); }
+  70% { transform: scale(0.98); }
+  100% { transform: scale(1); }
+}
+
+/* --- Aplicación global: TODOS los elementos visuales --- */
+
+/* Glass cards — respiración gelatinosa sutil */
+.glass {
+  animation: jelly-breathe 4s ease-in-out infinite;
+  will-change: transform;
+}
+/* Stagger para múltiples glass cards hermanas */
+.glass:nth-child(2) { animation-delay: 0.3s; }
+.glass:nth-child(3) { animation-delay: 0.6s; }
+.glass:nth-child(4) { animation-delay: 0.9s; }
+.glass:nth-child(5) { animation-delay: 1.2s; }
+.glass:nth-child(6) { animation-delay: 1.5s; }
+
+/* Interactive glass cards — morph más pronunciado */
+.glass-liquid {
+  animation: jelly-morph 3.5s ease-in-out infinite;
+}
+.glass-liquid:nth-child(2) { animation-delay: 0.4s; }
+.glass-liquid:nth-child(3) { animation-delay: 0.8s; }
+
+/* Botones — morph gelatinoso */
+.btn-primary {
+  animation: jelly-morph 3s ease-in-out infinite;
+}
+.btn-glass {
+  animation: jelly-breathe 3.5s ease-in-out infinite;
+}
+.btn-success {
+  animation: jelly-morph 3.2s ease-in-out infinite;
+}
+.btn-danger {
+  animation: jelly-morph 3.2s ease-in-out infinite;
+}
+.btn-ghost {
+  animation: jelly-ripple 4s ease-in-out infinite;
+}
+
+/* Inputs — respiración muy sutil */
+.input-glass {
+  animation: jelly-breathe 5s ease-in-out infinite;
+}
+.input-glass:nth-child(2) { animation-delay: 0.5s; }
+.input-glass:nth-child(3) { animation-delay: 1s; }
+.input-glass:focus {
+  animation: jelly-morph 2s ease-in-out infinite;
+}
+
+/* Labels — wobble sutil */
+.label-glass {
+  animation: jelly-wobble 6s ease-in-out infinite;
+}
+
+/* Nav items — ripple gelatinoso */
+.nav-item {
+  animation: jelly-ripple 3s ease-in-out infinite;
+  will-change: transform;
+}
+.nav-item:nth-child(1) { animation-delay: 0s; }
+.nav-item:nth-child(2) { animation-delay: 0.4s; }
+.nav-item:nth-child(3) { animation-delay: 0.8s; }
+.nav-item:nth-child(4) { animation-delay: 1.2s; }
+
+/* H1, H2 — jello sutil */
+h1 {
+  animation: jelly-jello 5s ease-in-out infinite;
+  will-change: transform;
+}
+h2 {
+  animation: jelly-wobble 5.5s ease-in-out infinite;
+  will-change: transform;
+}
+h3 {
+  animation: jelly-wobble 6s ease-in-out infinite;
+}
+
+/* Links — ripple on idle, jiggle on hover */
+a {
+  animation: jelly-ripple 4s ease-in-out infinite;
+  will-change: transform;
+}
+a:hover {
+  animation: jelly-jiggle 0.4s ease-in-out;
+}
+
+/* Iconos Lucide — wobble sutil */
+.lucide {
+  animation: jelly-wobble 4.5s ease-in-out infinite;
+  will-change: transform;
+}
+
+/* App blobs — float gelatinoso (más pronunciado que drift) */
+.app-blob.blob-1 {
+  animation: drift-1 30s ease-in-out infinite, jelly-float 6s ease-in-out infinite;
+}
+.app-blob.blob-2 {
+  animation: drift-2 36s ease-in-out infinite, jelly-float 7s ease-in-out infinite;
+  animation-delay: 0s, 1.5s;
+}
+.app-blob.blob-3 {
+  animation: drift-3 40s ease-in-out infinite, jelly-float 8s ease-in-out infinite;
+  animation-delay: 0s, 3s;
+}
+.app-blob.blob-4 {
+  animation: drift-4 34s ease-in-out infinite, jelly-float 6.5s ease-in-out infinite;
+  animation-delay: 0s, 4.5s;
+}
+
+/* Texto gradiente — jello sutil */
+.text-gradient-purple {
+  animation: jelly-jello 4s ease-in-out infinite;
+}
+.text-gradient-cyan {
+  animation: jelly-jello 4.5s ease-in-out infinite;
+}
+
+/* --- Clases utilitarias de gelatina --- */
+
+.jelly-breathe { animation: jelly-breathe 4s ease-in-out infinite; will-change: transform; }
+.jelly-breathe-slow { animation: jelly-breathe 6s ease-in-out infinite; will-change: transform; }
+.jelly-wobble { animation: jelly-wobble 3.5s ease-in-out infinite; will-change: transform; }
+.jelly-morph { animation: jelly-morph 3s ease-in-out infinite; will-change: transform; }
+.jelly-jello { animation: jelly-jello 3s ease-in-out infinite; will-change: transform; }
+.jelly-ripple { animation: jelly-ripple 3s ease-in-out infinite; will-change: transform; }
+.jelly-float { animation: jelly-float 4s ease-in-out infinite; will-change: transform; }
+.jelly-glow { animation: jelly-glow 3s ease-in-out infinite; will-change: transform; }
+.jelly-settle { animation: jelly-settle 0.6s var(--ease-jelly) both; }
+
+/* Variaciones de velocidad */
+.jelly-fast { animation-duration: 2s !important; }
+.jelly-slow { animation-duration: 6s !important; }
+.jelly-subtle { animation-duration: 8s !important; }
+
+/* Stagger delays para grupos */
+.jelly-d1 { animation-delay: 0.1s; }
+.jelly-d2 { animation-delay: 0.2s; }
+.jelly-d3 { animation-delay: 0.3s; }
+.jelly-d4 { animation-delay: 0.4s; }
+.jelly-d5 { animation-delay: 0.5s; }
+.jelly-d6 { animation-delay: 0.6s; }
+.jelly-d7 { animation-delay: 0.7s; }
+.jelly-d8 { animation-delay: 0.8s; }
+
+/* --- Mejoras de hover con gelatina --- */
+
+/* Glass hover — breathe más rápido + jiggle */
+.glass:hover {
+  animation: jelly-jiggle 0.5s ease-in-out, jelly-breathe 2s ease-in-out infinite;
+}
+
+/* Botones hover — jello */
+.btn-primary:hover {
+  animation: jelly-jello 0.6s ease-in-out, jelly-morph 2s ease-in-out infinite;
+}
+.btn-glass:hover {
+  animation: jelly-jiggle 0.4s ease-in-out, jelly-breathe 2.5s ease-in-out infinite;
+}
+
+/* Input focus — morph más pronunciado */
+.input-glass:focus {
+  animation: jelly-morph 2.5s ease-in-out infinite;
+}
+
+/* --- Elementos específicos de la app --- */
+
+/* Logo icon — jello más pronunciado */
+.animate-pulse-glow {
+  animation: pulse-glow 3s ease-in-out infinite, jelly-jello 3s ease-in-out infinite !important;
+}
+
+/* Avatar — wobble */
+[class*="rounded-full"][class*="font-extrabold"] {
+  animation: jelly-wobble 4s ease-in-out infinite;
+  will-change: transform;
+}
+
+/* Chips/badges — ripple */
+.rounded-full {
+  animation: jelly-ripple 3.5s ease-in-out infinite;
+  will-change: transform;
+}
+
+/* Progress bar — morph sutil */
+.rounded-full > .rounded-full {
+  animation: jelly-morph 4s ease-in-out infinite;
+}
+
+/* Bottom nav container — breathe */
+nav > .glass {
+  animation: jelly-breathe 5s ease-in-out infinite;
+}
+
+/* Nav pill indicator — jello */
+nav .absolute.rounded-2xl {
+  animation: jelly-jello 3s ease-in-out infinite;
+  will-change: transform;
+}
+
+/* Error message — jello settle in */
+.text-neon-pink[class*="rounded-2xl"] {
+  animation: jelly-settle 0.5s var(--ease-jelly) both, jelly-wobble 4s ease-in-out infinite;
+}
+
+/* Emoji/icon containers — wobble */
+[class*="items-center"][class*="justify-center"][class*="rounded-2xl"] {
+  animation: jelly-wobble 4s ease-in-out infinite;
+  will-change: transform;
+}
+[class*="items-center"][class*="justify-center"][class*="rounded-xl"] {
+  animation: jelly-wobble 4.5s ease-in-out infinite;
+  will-change: transform;
+}
+
+/* Stat tiles — breathe con stagger */
+.grid > .glass {
+  animation: jelly-breathe 3.5s ease-in-out infinite;
+}
+.grid > .glass:nth-child(1) { animation-delay: 0s; }
+.grid > .glass:nth-child(2) { animation-delay: 0.3s; }
+.grid > .glass:nth-child(3) { animation-delay: 0.6s; }
+.grid > .glass:nth-child(4) { animation-delay: 0.9s; }
+
+/* Select dropdowns — morph */
+select.input-glass {
+  animation: jelly-morph 4s ease-in-out infinite;
+}
+
+/* Disclaimer/age text — float sutil */
+.text-white\/30 {
+  animation: jelly-float 5s ease-in-out infinite;
+}
+
+/* Subtitle text — float sutil */
+.text-white\/50 {
+  animation: jelly-float 6s ease-in-out infinite;
+}
+
+/* ============================================================
    SCROLLBAR Y UTILIDADES
    ============================================================ */
 

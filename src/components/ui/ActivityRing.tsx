@@ -1,3 +1,5 @@
+import { motion } from 'framer-motion';
+
 interface Props {
   value: number; // 0-100
   size?: number;
@@ -8,7 +10,7 @@ interface Props {
   children?: React.ReactNode;
 }
 
-// Círculo de progreso con gradiente neón y glow.
+// Círculo de progreso con gradiente neón y glow + jelly idle.
 // SVG con stroke gradient + drop-shadow filter para el halo luminoso.
 export function ActivityRing({
   value,
@@ -25,7 +27,19 @@ export function ActivityRing({
   const gid = `ring-grad-${gradientFrom.replace('#', '')}-${gradientTo.replace('#', '')}`;
 
   return (
-    <div className="relative inline-flex items-center justify-center" style={{ width: size, height: size }}>
+    <motion.div
+      className="relative inline-flex items-center justify-center"
+      style={{ width: size, height: size }}
+      animate={{
+        scale: [1, 1.02, 0.98, 1.01, 1],
+      }}
+      transition={{
+        duration: 4,
+        repeat: Infinity,
+        ease: 'easeInOut',
+        repeatDelay: 2,
+      }}
+    >
       <svg width={size} height={size} className="-rotate-90">
         <defs>
           <linearGradient id={gid} x1="0%" y1="0%" x2="100%" y2="100%">
@@ -70,6 +84,6 @@ export function ActivityRing({
       <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
         {children}
       </div>
-    </div>
+    </motion.div>
   );
 }
