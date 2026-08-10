@@ -11,27 +11,28 @@ const items = [
   { to: '/perfil', label: 'Perfil', icon: User, end: false },
 ];
 
-const NAV_SPRING = { stiffness: 350, damping: 28, mass: 0.9 };
-const INDICATOR_SPRING = { stiffness: 300, damping: 24, mass: 0.7 };
-
 /**
  * Bottom navigation with a physically sliding liquid-glass indicator.
  *
  * The active pill:
- * - SLIDES from old position to new (never disappears/reappears)
- * - Stretches horizontally during movement
- * - Squashes on arrival
- * - Bounces softly on settle
- * - Generates a subtle glow wave in the bar on arrival
+ * - Is the SAME DOM element that SLIDES between positions (never unmounts)
+ * - Compacts slightly before moving (anticipation)
+ * - Stretches horizontally during slide
+ * - Compresses on arrival (settle)
+ * - Bounces softly back to rest shape
+ * - Maintains liquid glass appearance throughout
+ * - Direction-aware: moves left or right physically
  */
 export function BottomNav() {
   const location = useLocation();
   const containerRef = useRef<HTMLDivElement>(null);
   const itemRefs = useRef<(HTMLAnchorElement | null)[]>([]);
+
   const [activeIdx, setActiveIdx] = useState(0);
   const [indicator, setIndicator] = useState({ x: 0, width: 0 });
-  const [isMoving, setIsMoving] = useState(false);
-  const [barGlow, setBarGlow] = useState<{ x: number; opacity: number }>({ x: 0, opacity: 0 });
+
+  // Phase: 'idle' | 'moving' | 'settling'
+  const [phase, setPhase] = useState<'idle' | 'moving' | 'settling'>('idle');
 
   // Detect active index from current route
   useEffect(() => {
@@ -41,15 +42,12 @@ export function BottomNav() {
         (!it.end && location.pathname.startsWith(it.to)),
     );
     if (idx !== -1 && idx !== activeIdx) {
-      setIsMoving(true);
+      setPhase('moving');
       setActiveIdx(idx);
-      // Glow wave at new position
-      setBarGlow({ x: indicator.x + indicator.width / 2, opacity: 0.6 });
-      setTimeout(() => setBarGlow((g) => ({ ...g, opacity: 0 })), 500);
     }
   }, [location.pathname]);
 
-  // Measure the active item and move indicator there
+  // Measure the active item and update indicator position
   const updateIndicator = useCallback(() => {
     const el = itemRefs.current[activeIdx];
     const container = containerRef.current;
@@ -57,7 +55,7 @@ export function BottomNav() {
 
     const elRect = el.getBoundingClientRect();
     const containerRect = container.getBoundingClientRect();
-    const pad = 6; // visual padding inside pill
+    const pad = 6;
 
     setIndicator({
       x: elRect.left - containerRect.left + pad,
@@ -71,6 +69,46 @@ export function BottomNav() {
     return () => window.removeEventListener('resize', updateIndicator);
   }, [updateIndicator]);
 
+  // Phase transitions
+  useEffect(() => {
+    if (phase === 'moving') {
+      // After the slide spring settles, switch to settling phase
+      const timer = setTimeout(() => setPhase('settling'), 320);
+      return () => clearTimeout(timer);
+    }
+    if (phase === 'settling') {
+      // After the settle bounce, go back to idle
+      const timer = setTimeout(() => setPhase('idle'), 280);
+      return () => clearTimeout(timer);
+    }
+  }, [phase, activeIdx]);
+
+  // Indicator animation values per phase
+  const indicatorAnimate = {
+    x: indicator.x,
+    width:
+      phase === 'moving'
+        ? indicator.width * 1.1    // stretch horizontally during slide
+        : phase === 'settling'
+          ? indicator.width * 0.95  // compress on arrival
+          : indicator.width,       // rest
+    scaleY:
+      phase === 'moving'
+        ? 0.92                      // squash vertically during slide
+        : phase === 'settling'
+          ? 1.04                     // slight overshoot bounce
+          : 1,                       // rest
+  };
+
+  const springMoving = { type: 'spring' as const, stiffness: 280, damping: 22, mass: 0.8 };
+  const springSettling = { type: 'spring' as const, stiffness: 400, damping: 14, mass: 0.6 };
+  const springIdle = { type: 'spring' as const, stiffness: 350, damping: 26, mass: 0.7 };
+
+  const transition =
+    phase === 'moving' ? springMoving :
+    phase === 'settling' ? springSettling :
+    springIdle;
+
   return (
     <nav className="fixed bottom-0 left-1/2 z-40 w-full max-w-md -translate-x-1/2 px-4 pb-4 safe-bottom pointer-events-none">
       <div
@@ -78,43 +116,37 @@ export function BottomNav() {
         className="glass glass-glow pointer-events-auto relative flex items-center justify-around rounded-3xl px-2 py-2.5"
         style={{ borderRadius: 28 }}
       >
-        {/* Ambient glow wave */}
-        <motion.div
-          className="pointer-events-none absolute inset-0 overflow-hidden"
-          style={{ borderRadius: 'inherit' }}
-        >
-          <motion.div
-            className="absolute top-0 h-full w-24"
-            animate={{ x: barGlow.x - 48, opacity: barGlow.opacity }}
-            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-            style={{
-              background: 'radial-gradient(ellipse, rgba(155,92,255,0.2), transparent 80%)',
-              filter: 'blur(8px)',
-            }}
-          />
-        </motion.div>
-
-        {/* Sliding glass indicator pill */}
+        {/* Sliding liquid-glass indicator pill — THE SAME element always */}
         <motion.div
           className="absolute top-1.5 left-0 h-[calc(100%-12px)] rounded-2xl pointer-events-none z-0"
-          animate={{
-            x: indicator.x,
-            width: isMoving
-              ? indicator.width * 1.08 // stretch during movement
-              : indicator.width,
-            scaleY: isMoving ? 0.94 : 1, // squash on arrival
-          }}
-          transition={isMoving ? { type: 'spring', ...NAV_SPRING } : { type: 'spring', ...INDICATOR_SPRING }}
-          onAnimationComplete={() => {
-            if (isMoving) setIsMoving(false);
-          }}
+          animate={indicatorAnimate}
+          transition={transition}
           style={{
             background: 'rgba(155, 92, 255, 0.15)',
             boxShadow:
-              '0 0 18px rgba(155, 92, 255, 0.45), inset 0 0 12px rgba(155, 92, 255, 0.15)',
+              '0 0 20px rgba(155, 92, 255, 0.45), inset 0 0 14px rgba(155, 92, 255, 0.15)',
             border: '1px solid rgba(155, 92, 255, 0.2)',
           }}
-        />
+        >
+          {/* Glass highlight on indicator */}
+          <div
+            className="absolute inset-0 rounded-2xl pointer-events-none"
+            style={{
+              background: 'linear-gradient(180deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.03) 50%, transparent 100%)',
+            }}
+          />
+          {/* Sheen that moves during slide */}
+          <motion.div
+            className="absolute inset-0 rounded-2xl pointer-events-none overflow-hidden"
+            animate={{
+              opacity: phase === 'moving' ? 0.8 : 0,
+            }}
+            transition={{ duration: 0.3 }}
+            style={{
+              background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent)',
+            }}
+          />
+        </motion.div>
 
         {/* Nav items */}
         {items.map((it, idx) => {
