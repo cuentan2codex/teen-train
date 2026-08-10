@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from './store/auth';
 import { AppBackground } from './components/layout/AppBackground';
+import { BottomNav } from './components/layout/BottomNav';
 import { LoginPage } from './pages/auth/LoginPage';
 import { RegisterPage } from './pages/auth/RegisterPage';
 import { RecoverPage } from './pages/auth/RecoverPage';
@@ -33,6 +34,55 @@ function Public({ children }: { children: JSX.Element }) {
   return children;
 }
 
+/**
+ * Routes that should hide the bottom nav.
+ * The nav is rendered OUTSIDE Routes so it persists across navigation.
+ */
+const HIDE_NAV_ROUTES = [
+  '/configuracion',
+  '/historial/',
+  '/entrenar/sesion/',
+  '/ejercicio/',
+  '/rutina/',
+];
+
+function AppRoutes() {
+  return (
+    <Routes>
+      <Route path="/login" element={<Public><LoginPage /></Public>} />
+      <Route path="/registro" element={<Public><RegisterPage /></Public>} />
+      <Route path="/recuperar" element={<Public><RecoverPage /></Public>} />
+
+      <Route path="/" element={<Protected><DashboardPage /></Protected>} />
+      <Route path="/entrenar" element={<Protected><RoutinesPage /></Protected>} />
+      <Route path="/rutina/:id" element={<Protected><RoutineDetailPage /></Protected>} />
+      <Route path="/ejercicios" element={<Protected><CatalogPage /></Protected>} />
+      <Route path="/ejercicio/:id" element={<Protected><ExerciseDetailPage /></Protected>} />
+      <Route path="/entrenar/sesion/:id" element={<Protected><WorkoutSessionPage /></Protected>} />
+      <Route path="/historial" element={<Protected><HistoryPage /></Protected>} />
+      <Route path="/historial/:id" element={<Protected><WorkoutDetailPage /></Protected>} />
+      <Route path="/progreso" element={<Protected><ProgressPage /></Protected>} />
+      <Route path="/perfil" element={<Protected><ProfilePage /></Protected>} />
+      <Route path="/configuracion" element={<Protected><SettingsPage /></Protected>} />
+
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
+  );
+}
+
+function PersistentLayout() {
+  const location = useLocation();
+
+  const hideNav = HIDE_NAV_ROUTES.some((r) => location.pathname.startsWith(r));
+
+  return (
+    <>
+      <AppRoutes />
+      {!hideNav && <BottomNav />}
+    </>
+  );
+}
+
 export default function App() {
   const { init } = useAuth();
   useEffect(() => {
@@ -51,25 +101,7 @@ export default function App() {
   return (
     <BrowserRouter basename={import.meta.env.BASE_URL.replace(/\/$/, '')}>
       <AppBackground />
-      <Routes>
-        <Route path="/login" element={<Public><LoginPage /></Public>} />
-        <Route path="/registro" element={<Public><RegisterPage /></Public>} />
-        <Route path="/recuperar" element={<Public><RecoverPage /></Public>} />
-
-        <Route path="/" element={<Protected><DashboardPage /></Protected>} />
-        <Route path="/entrenar" element={<Protected><RoutinesPage /></Protected>} />
-        <Route path="/rutina/:id" element={<Protected><RoutineDetailPage /></Protected>} />
-        <Route path="/ejercicios" element={<Protected><CatalogPage /></Protected>} />
-        <Route path="/ejercicio/:id" element={<Protected><ExerciseDetailPage /></Protected>} />
-        <Route path="/entrenar/sesion/:id" element={<Protected><WorkoutSessionPage /></Protected>} />
-        <Route path="/historial" element={<Protected><HistoryPage /></Protected>} />
-        <Route path="/historial/:id" element={<Protected><WorkoutDetailPage /></Protected>} />
-        <Route path="/progreso" element={<Protected><ProgressPage /></Protected>} />
-        <Route path="/perfil" element={<Protected><ProfilePage /></Protected>} />
-        <Route path="/configuracion" element={<Protected><SettingsPage /></Protected>} />
-
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
+      <PersistentLayout />
     </BrowserRouter>
   );
 }

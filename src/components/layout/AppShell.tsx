@@ -1,9 +1,9 @@
 import { type ReactNode } from 'react';
-import { BottomNav } from './BottomNav';
 import { clsx } from 'clsx';
 
 interface Props {
   children: ReactNode;
+  /** @deprecated Nav is now persistent in App.tsx. This prop only controls bottom padding. */
   showNav?: boolean;
   className?: string;
 }
@@ -14,7 +14,6 @@ export function AppShell({ children, showNav = true, className }: Props) {
       <main className={clsx('flex-1 pt-4', showNav && 'pb-32', className)}>
         {children}
       </main>
-      {showNav && <BottomNav />}
     </div>
   );
 }
