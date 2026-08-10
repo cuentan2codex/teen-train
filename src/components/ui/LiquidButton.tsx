@@ -77,7 +77,6 @@ export function LiquidButton({
     },
   };
 
-  const spring = { stiffness: 420, damping: 18, mass: 0.7 };
   const springLight = { stiffness: 500, damping: 22, mass: 0.5 };
 
   return (
