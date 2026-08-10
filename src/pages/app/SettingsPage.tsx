@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { ArrowLeft, Moon, Sun, Monitor, Bell, Scale as ScaleIcon, Lock, Trash2, User } from 'lucide-react';
 import { AppShell } from '../../components/layout/AppShell';
 import { PageHeader } from '../../components/ui/PageHeader';
@@ -49,12 +50,14 @@ export function SettingsPage() {
 
   return (
     <AppShell showNav={false}>
-      <button
+      <motion.button
         onClick={() => nav(-1)}
-        className="mb-4 inline-flex items-center gap-1 text-sm font-medium text-white/60 hover:text-white transition"
+        className="mb-4 inline-flex items-center gap-1 text-sm font-medium text-white/60"
+        whileTap={{ x: -2, scale: 0.95 }}
+        transition={{ type: 'spring', stiffness: 400, damping: 22 }}
       >
         <ArrowLeft size={16} /> Volver
-      </button>
+      </motion.button>
 
       <PageHeader title="Configuración" icon={<User size={20} />} />
 
@@ -98,24 +101,28 @@ export function SettingsPage() {
       <Section title="Entrenamiento">
         <Row label={<span className="flex items-center gap-2"><ScaleIcon size={16} className="text-white/40" /> Unidades de peso</span>}>
           <div className="flex gap-2">
-            <button
+            <motion.button
               onClick={() => updateProfile({ units: 'kg' as Units })}
-              className="rounded-full px-3 py-1 text-xs font-semibold transition"
+              className="rounded-full px-3 py-1 text-xs font-semibold"
               style={{
                 background: profile.units === 'kg' ? 'rgba(155,92,255,0.2)' : 'rgba(255,255,255,0.05)',
                 color: profile.units === 'kg' ? '#9B5CFF' : 'rgba(255,255,255,0.6)',
                 border: `1px solid ${profile.units === 'kg' ? 'rgba(155,92,255,0.4)' : 'rgba(255,255,255,0.1)'}`,
               }}
-            >kg</button>
-            <button
+              whileTap={{ scale: 0.88, scaleX: 1.06 }}
+              transition={{ type: 'spring', stiffness: 450, damping: 20, mass: 0.5 }}
+            >kg</motion.button>
+            <motion.button
               onClick={() => updateProfile({ units: 'lb' as Units })}
-              className="rounded-full px-3 py-1 text-xs font-semibold transition"
+              className="rounded-full px-3 py-1 text-xs font-semibold"
               style={{
                 background: profile.units === 'lb' ? 'rgba(155,92,255,0.2)' : 'rgba(255,255,255,0.05)',
                 color: profile.units === 'lb' ? '#9B5CFF' : 'rgba(255,255,255,0.6)',
                 border: `1px solid ${profile.units === 'lb' ? 'rgba(155,92,255,0.4)' : 'rgba(255,255,255,0.1)'}`,
               }}
-            >lb</button>
+              whileTap={{ scale: 0.88, scaleX: 1.06 }}
+              transition={{ type: 'spring', stiffness: 450, damping: 20, mass: 0.5 }}
+            >lb</motion.button>
           </div>
         </Row>
         <Row label={<span className="flex items-center gap-2"><Bell size={16} className="text-white/40" /> Notificaciones</span>}>
@@ -228,35 +235,41 @@ function Row({ label, children }: { label: React.ReactNode; children: React.Reac
 
 function ThemeBtn({ active, onClick, icon, label }: { active: boolean; onClick: () => void; icon: React.ReactNode; label: string }) {
   return (
-    <button
+    <motion.button
       onClick={onClick}
-      className="flex flex-1 items-center justify-center gap-1.5 rounded-2xl py-2.5 text-xs font-semibold transition active:scale-95"
+      className="flex flex-1 items-center justify-center gap-1.5 rounded-2xl py-2.5 text-xs font-semibold"
       style={{
         background: active ? 'rgba(155,92,255,0.2)' : 'rgba(255,255,255,0.05)',
         color: active ? '#9B5CFF' : 'rgba(255,255,255,0.6)',
         border: `1px solid ${active ? 'rgba(155,92,255,0.4)' : 'rgba(255,255,255,0.1)'}`,
         boxShadow: active ? '0 0 12px rgba(155,92,255,0.3)' : 'none',
       }}
+      whileTap={{ scale: 0.9, scaleX: 1.05, y: 1 }}
+      transition={{ type: 'spring', stiffness: 450, damping: 20, mass: 0.6 }}
     >
       {icon} {label}
-    </button>
+    </motion.button>
   );
 }
 
 function Toggle({ checked, onChange }: { checked: boolean; onChange: (v: boolean) => void }) {
   return (
-    <button
+    <motion.button
       onClick={() => onChange(!checked)}
-      className="relative h-6 w-11 rounded-full transition"
+      className="relative h-6 w-11 rounded-full"
       style={{
         background: checked ? 'linear-gradient(135deg, #9B5CFF, #FF3D8D)' : 'rgba(255,255,255,0.15)',
         boxShadow: checked ? '0 0 12px rgba(155,92,255,0.4)' : 'none',
       }}
+      whileTap={{ scaleX: 0.92, scaleY: 1.06 }}
+      transition={{ type: 'spring', stiffness: 500, damping: 22, mass: 0.5 }}
       aria-pressed={checked}
     >
-      <span
-        className={`absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-all ${checked ? 'left-[22px]' : 'left-0.5'}`}
+      <motion.span
+        className="absolute top-0.5 h-5 w-5 rounded-full bg-white shadow"
+        animate={{ left: checked ? 22 : 2 }}
+        transition={{ type: 'spring', stiffness: 400, damping: 24, mass: 0.6 }}
       />
-    </button>
+    </motion.button>
   );
 }

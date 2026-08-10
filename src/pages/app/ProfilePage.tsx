@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { Award, Flame, Dumbbell, Settings, LogOut, Trophy, ChevronRight } from 'lucide-react';
 import { AppShell } from '../../components/layout/AppShell';
 import { PageHeader } from '../../components/ui/PageHeader';
@@ -31,17 +32,19 @@ export function ProfilePage() {
         title="Perfil"
         icon={<Trophy size={20} />}
         action={
-          <button
+          <motion.button
             onClick={() => nav('/configuracion')}
-            className="flex h-10 w-10 items-center justify-center rounded-2xl text-white/60 transition hover:bg-white/8 hover:text-white"
+            whileTap={{ scale: 0.85, rotate: -10 }}
+            transition={{ type: 'spring', stiffness: 500, damping: 18, mass: 0.5 }}
             aria-label="Configuración"
+            className="flex h-10 w-10 items-center justify-center rounded-2xl text-white/60"
             style={{
               background: 'rgba(255,255,255,0.05)',
               border: '1px solid rgba(255,255,255,0.1)',
             }}
           >
             <Settings size={20} />
-          </button>
+          </motion.button>
         }
       />
 

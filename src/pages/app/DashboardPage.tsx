@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { Flame, Trophy, Dumbbell, Scale, ChevronRight, Sparkles, Zap, Clock } from 'lucide-react';
 import { AppShell } from '../../components/layout/AppShell';
 import { GlassCard } from '../../components/ui/GlassCard';
@@ -53,9 +54,13 @@ export function DashboardPage() {
           <p className="text-xs font-medium uppercase tracking-wide text-white/40">{today}</p>
           <h1 className="text-2xl font-extrabold tracking-tight text-white">{greeting}, {profile.nombre} 👋</h1>
         </div>
-        <button onClick={() => nav('/perfil')}>
+        <motion.button
+          onClick={() => nav('/perfil')}
+          whileTap={{ scale: 0.88, rotate: -8 }}
+          transition={{ type: 'spring', stiffness: 500, damping: 18, mass: 0.5 }}
+        >
           <Avatar name={profile.nombre} size={44} glow />
-        </button>
+        </motion.button>
       </div>
 
       {/* Tarjeta hero con ActivityRing */}
@@ -204,12 +209,14 @@ export function DashboardPage() {
       )}
 
       {/* CTA principal */}
-      <button
+      <motion.button
         onClick={() => nav('/entrenar')}
         className="btn-primary w-full py-4 text-base shadow-glow-purple stagger-6"
+        whileTap={{ scaleX: 1.05, scaleY: 0.9, y: 2, filter: 'brightness(1.12)' }}
+        transition={{ type: 'spring', stiffness: 420, damping: 18, mass: 0.7 }}
       >
         <Dumbbell size={22} /> Comenzar entrenamiento
-      </button>
+      </motion.button>
     </AppShell>
   );
 }
