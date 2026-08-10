@@ -9,10 +9,15 @@ const items = [
   { to: '/perfil', label: 'Perfil', icon: User, end: false },
 ];
 
+// Navegación inferior flotante de vidrio líquido.
+// No toca los bordes — flota como pieza independiente con sombra y glow.
 export function BottomNav() {
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-30 border-t border-slate-200 bg-white/90 backdrop-blur safe-bottom dark:border-slate-800 dark:bg-slate-900/90">
-      <div className="mx-auto grid max-w-2xl grid-cols-4">
+    <nav className="fixed bottom-0 left-1/2 z-40 w-full max-w-md -translate-x-1/2 px-4 pb-4 safe-bottom pointer-events-none">
+      <div
+        className="glass glass-glow pointer-events-auto flex items-center justify-around rounded-3xl px-2 py-2.5"
+        style={{ borderRadius: 28 }}
+      >
         {items.map((it) => {
           const Icon = it.icon;
           return (
@@ -22,16 +27,29 @@ export function BottomNav() {
               end={it.end}
               className={({ isActive }) =>
                 clsx(
-                  'flex flex-col items-center gap-0.5 py-2.5 text-[11px] font-medium transition',
+                  'relative flex flex-1 flex-col items-center gap-0.5 rounded-2xl py-2 text-[10px] font-semibold transition-all duration-300',
                   isActive
-                    ? 'text-brand-600 dark:text-brand-400'
-                    : 'text-slate-500 dark:text-slate-400',
+                    ? 'text-neon-purple'
+                    : 'text-white/40 hover:text-white/70',
                 )
               }
             >
               {({ isActive }) => (
                 <>
-                  <Icon size={22} strokeWidth={isActive ? 2.5 : 2} />
+                  {isActive && (
+                    <span
+                      className="absolute inset-0 -z-10 rounded-2xl"
+                      style={{
+                        background: 'rgba(155, 92, 255, 0.18)',
+                        boxShadow: '0 0 18px rgba(155, 92, 255, 0.5), inset 0 0 12px rgba(155, 92, 255, 0.2)',
+                      }}
+                    />
+                  )}
+                  <Icon
+                    size={22}
+                    strokeWidth={isActive ? 2.5 : 2}
+                    style={isActive ? { filter: 'drop-shadow(0 0 6px rgba(155, 92, 255, 0.8))' } : undefined}
+                  />
                   {it.label}
                 </>
               )}

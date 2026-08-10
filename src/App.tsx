@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from './store/auth';
+import { AppBackground } from './components/layout/AppBackground';
 import { LoginPage } from './pages/auth/LoginPage';
 import { RegisterPage } from './pages/auth/RegisterPage';
 import { RecoverPage } from './pages/auth/RecoverPage';
@@ -50,6 +51,7 @@ export default function App() {
 
   return (
     <BrowserRouter basename={import.meta.env.BASE_URL.replace(/\/$/, '')}>
+      <AppBackground />
       <Routes>
         <Route path="/login" element={<Public><LoginPage /></Public>} />
         <Route path="/registro" element={<Public><RegisterPage /></Public>} />

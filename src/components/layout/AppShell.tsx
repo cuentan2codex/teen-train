@@ -10,8 +10,8 @@ interface Props {
 
 export function AppShell({ children, showNav = true, className }: Props) {
   return (
-    <div className="mx-auto flex min-h-full max-w-2xl flex-col">
-      <main className={clsx('flex-1 px-4 pt-4', showNav && 'pb-24', className)}>
+    <div className="mx-auto flex min-h-full max-w-md flex-col px-4">
+      <main className={clsx('flex-1 pt-4', showNav && 'pb-32', className)}>
         {children}
       </main>
       {showNav && <BottomNav />}

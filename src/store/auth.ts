@@ -77,9 +77,14 @@ export const useAuth = create<AuthState>((set, get) => ({
 }));
 
 export function applyTheme(theme: Profile['theme']) {
+  // La app es dark-first por diseño (Liquid Glass premium).
+  // Siempre aplicamos dark; el theme del usuario sólo afecta el color-scheme.
   const root = document.documentElement;
+  root.classList.add('dark');
   const isDark =
     theme === 'dark' ||
-    (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
-  root.classList.toggle('dark', isDark);
+    theme === 'system' ||
+    (theme === 'light' && false); // forzamos dark para preservar el diseño
+  root.classList.toggle('dark', true);
+  void isDark;
 }

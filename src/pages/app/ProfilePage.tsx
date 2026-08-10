@@ -1,8 +1,11 @@
 import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Award, Flame, Dumbbell, Settings, LogOut, Trophy } from 'lucide-react';
+import { Award, Flame, Dumbbell, Settings, LogOut, Trophy, ChevronRight } from 'lucide-react';
 import { AppShell } from '../../components/layout/AppShell';
 import { PageHeader } from '../../components/ui/PageHeader';
+import { GlassCard } from '../../components/ui/GlassCard';
+import { Avatar } from '../../components/ui/Avatar';
+import { Progress } from '../../components/ui/Progress';
 import { useAuth } from '../../store/auth';
 import { workoutsRepo, achievementsRepo } from '../../services/database';
 import { calcStreak, levelFromXP } from '../../services/gamification';
@@ -30,8 +33,12 @@ export function ProfilePage() {
         action={
           <button
             onClick={() => nav('/configuracion')}
-            className="rounded-full bg-slate-100 p-2 text-slate-600 dark:bg-slate-800 dark:text-slate-300"
+            className="flex h-10 w-10 items-center justify-center rounded-2xl text-white/60 transition hover:bg-white/8 hover:text-white"
             aria-label="Configuración"
+            style={{
+              background: 'rgba(255,255,255,0.05)',
+              border: '1px solid rgba(255,255,255,0.1)',
+            }}
           >
             <Settings size={20} />
           </button>
@@ -39,62 +46,75 @@ export function ProfilePage() {
       />
 
       {/* Cabecera de perfil */}
-      <div className="card mb-4 flex items-center gap-4">
-        <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-500 to-brand-700 text-2xl font-extrabold text-white">
-          {profile.nombre.charAt(0).toUpperCase()}
+      <GlassCard variant="purple" glow className="mb-4 flex items-center gap-4 p-5 animate-slide-up">
+        <Avatar name={profile.nombre} size={64} glow />
+        <div className="flex-1">
+          <h2 className="text-xl font-extrabold text-white">{profile.nombre}</h2>
+          <p className="text-sm text-white/50">{profile.email}</p>
+          <div className="mt-2">
+            <div className="mb-1 flex items-center justify-between text-xs">
+              <span className="font-semibold text-neon-purple">Nivel {lvl.nivel}</span>
+              <span className="text-white/50">{profile.xp.toLocaleString()} XP</span>
+            </div>
+            <Progress value={lvl.progreso * 100} max={100} color="linear-gradient(90deg, #9B5CFF, #FF3D8D)" height={6} />
+          </div>
         </div>
-        <div>
-          <h2 className="text-xl font-extrabold">{profile.nombre}</h2>
-          <p className="text-sm text-slate-500">{profile.email}</p>
-          <p className="mt-1 text-xs font-semibold text-brand-600">Nivel {lvl.nivel} · {profile.xp.toLocaleString()} XP</p>
-        </div>
+      </GlassCard>
+
+      {/* Stats resumen */}
+      <div className="mb-4 grid grid-cols-3 gap-3">
+        <StatBox icon={<Flame size={18} />} value={`${streak}`} label="Racha días" color="#FF9E3D" delay={2} />
+        <StatBox icon={<Dumbbell size={18} />} value={`${totalWorkouts}`} label="Entrenamientos" color="#9B5CFF" delay={3} />
+        <StatBox icon={<Award size={18} />} value={`${unlocked.length}/${SEED_ACHIEVEMENTS.length}`} label="Logros" color="#00FF85" delay={4} />
       </div>
 
       {/* Datos físicos */}
-      <div className="card mb-4">
-        <h3 className="mb-3 text-sm font-bold uppercase tracking-wide text-slate-500">Datos personales</h3>
+      <GlassCard className="mb-4 p-4 stagger-5">
+        <h3 className="mb-3 text-xs font-bold uppercase tracking-wide text-white/40">Datos personales</h3>
         <div className="grid grid-cols-2 gap-3 text-sm">
           <Info label="Edad" value={`${profile.edad} años`} />
           <Info label="Altura" value={`${profile.altura_cm} cm`} />
           <Info label="Peso inicial" value={`${profile.peso_inicial_kg.toFixed(1)} kg`} />
           <Info label="Peso actual" value={`${profile.peso_actual_kg.toFixed(1)} kg`} />
-          <Info label="Objetivo" value={capitalize(profile.objetivo.replace('_', ' '))} />
-          <Info label="Nivel" value={capitalize(profile.nivel)} />
+          <Info label="Objetivo" value={profile.objetivo.replace('_', ' ')} />
+          <Info label="Nivel" value={profile.nivel} />
           <Info label="Miembro desde" value={formatDate(profile.created_at)} />
           <Info label="Unidades" value={profile.units.toUpperCase()} />
         </div>
-      </div>
-
-      {/* Stats resumen */}
-      <div className="mb-4 grid grid-cols-3 gap-3">
-        <StatBox icon={<Flame size={20} />} value={`${streak}`} label="Racha días" color="text-orange-500" />
-        <StatBox icon={<Dumbbell size={20} />} value={`${totalWorkouts}`} label="Entrenamientos" color="text-brand-600" />
-        <StatBox icon={<Award size={20} />} value={`${unlocked.length}/${SEED_ACHIEVEMENTS.length}`} label="Logros" color="text-amber-500" />
-      </div>
+      </GlassCard>
 
       {/* Logros */}
-      <h3 className="mb-2 text-sm font-bold uppercase tracking-wide text-slate-500">Logros</h3>
-      <div className="mb-4 grid grid-cols-3 gap-2">
-        {SEED_ACHIEVEMENTS.map((a) => {
-          const unlocked = unlockedIds.has(a.id);
+      <h3 className="mb-2 px-1 text-xs font-bold uppercase tracking-wide text-white/40">Logros</h3>
+      <div className="mb-6 grid grid-cols-3 gap-2">
+        {SEED_ACHIEVEMENTS.map((a, idx) => {
+          const isUnlocked = unlockedIds.has(a.id);
           return (
-            <div
+            <GlassCard
               key={a.id}
-              className={`card flex flex-col items-center gap-1 p-3 text-center transition ${
-                unlocked ? '' : 'opacity-40 grayscale'
+              className={`flex flex-col items-center gap-1 p-3 text-center transition stagger-${Math.min(idx + 1, 6)} ${
+                isUnlocked ? '' : 'opacity-30 grayscale'
               }`}
             >
-              <span className="text-3xl">{a.icono}</span>
-              <p className="text-xs font-bold leading-tight">{a.nombre}</p>
-              <p className="text-[10px] text-slate-500">{a.descripcion}</p>
-            </div>
+              <span className="text-3xl" style={isUnlocked ? { filter: 'drop-shadow(0 0 8px rgba(255,158,61,0.5))' } : undefined}>
+                {a.icono}
+              </span>
+              <p className="text-xs font-bold leading-tight text-white">{a.nombre}</p>
+              <p className="text-[10px] text-white/50">{a.descripcion}</p>
+            </GlassCard>
           );
         })}
       </div>
 
-      <button onClick={() => { logout(); nav('/login'); }} className="btn-secondary w-full">
-        <LogOut size={18} /> Cerrar sesión
-      </button>
+      {/* Menú rápido */}
+      <div className="space-y-2">
+        <MenuItem icon={<Settings size={18} />} label="Configuración" onClick={() => nav('/configuracion')} color="#9B5CFF" />
+        <MenuItem
+          icon={<LogOut size={18} />}
+          label="Cerrar sesión"
+          onClick={() => { logout(); nav('/login'); }}
+          color="#FF3D8D"
+        />
+      </div>
     </AppShell>
   );
 }
@@ -102,22 +122,38 @@ export function ProfilePage() {
 function Info({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <p className="text-xs text-slate-500">{label}</p>
-      <p className="font-semibold capitalize">{value}</p>
+      <p className="text-xs text-white/40">{label}</p>
+      <p className="font-semibold capitalize text-white">{value}</p>
     </div>
   );
 }
 
-function StatBox({ icon, value, label, color }: { icon: React.ReactNode; value: string; label: string; color: string }) {
+function StatBox({ icon, value, label, color, delay }: { icon: React.ReactNode; value: string; label: string; color: string; delay: number }) {
   return (
-    <div className="card flex flex-col items-center gap-1 p-3">
-      <div className={color}>{icon}</div>
-      <p className="text-lg font-extrabold leading-none">{value}</p>
-      <p className="text-[10px] text-slate-500">{label}</p>
-    </div>
+    <GlassCard className={`flex flex-col items-center gap-1 p-3 stagger-${delay}`}>
+      <div
+        className="flex h-9 w-9 items-center justify-center rounded-xl"
+        style={{ background: `${color}1f`, color, border: `1px solid ${color}40` }}
+      >
+        {icon}
+      </div>
+      <p className="text-lg font-extrabold leading-none text-white">{value}</p>
+      <p className="text-[10px] text-white/50">{label}</p>
+    </GlassCard>
   );
 }
 
-function capitalize(s: string): string {
-  return s.charAt(0).toUpperCase() + s.slice(1);
+function MenuItem({ icon, label, onClick, color }: { icon: React.ReactNode; label: string; onClick: () => void; color: string }) {
+  return (
+    <GlassCard interactive onClick={onClick} className="flex items-center gap-3 p-4">
+      <div
+        className="flex h-10 w-10 items-center justify-center rounded-xl"
+        style={{ background: `${color}1f`, color, border: `1px solid ${color}40` }}
+      >
+        {icon}
+      </div>
+      <span className="flex-1 font-medium text-white">{label}</span>
+      <ChevronRight size={20} className="text-white/30" />
+    </GlassCard>
+  );
 }

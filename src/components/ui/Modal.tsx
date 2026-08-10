@@ -10,29 +10,31 @@ interface Props {
   className?: string;
 }
 
+// Modal/BottomSheet glass con animación slide-up.
 export function Modal({ open, onClose, title, children, className }: Props) {
   if (!open) return null;
   return (
     <div
-      className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 p-0 animate-fade-in sm:items-center sm:p-4"
+      className="fixed inset-0 z-50 flex items-end justify-center bg-black/60 animate-fade-in sm:items-center sm:p-4"
+      style={{ backdropFilter: 'blur(6px)' }}
       onClick={onClose}
     >
       <div
         className={clsx(
-          'w-full max-w-md rounded-t-3xl bg-white p-5 shadow-xl animate-slide-up dark:bg-slate-900 sm:rounded-3xl',
+          'glass glass-glow w-full max-w-md rounded-t-4xl p-5 animate-slide-up sm:rounded-4xl',
           className,
         )}
         onClick={(e) => e.stopPropagation()}
       >
         {title && (
           <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-lg font-bold">{title}</h2>
+            <h2 className="text-lg font-bold text-white">{title}</h2>
             <button
               onClick={onClose}
               aria-label="Cerrar"
-              className="rounded-full p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800"
+              className="flex h-9 w-9 items-center justify-center rounded-full bg-white/8 text-white/60 transition hover:bg-white/15 hover:text-white"
             >
-              <X size={20} />
+              <X size={18} />
             </button>
           </div>
         )}

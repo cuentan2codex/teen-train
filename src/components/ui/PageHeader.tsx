@@ -9,17 +9,24 @@ interface Props {
 
 export function PageHeader({ title, subtitle, icon, action }: Props) {
   return (
-    <div className="mb-4 flex items-center justify-between">
+    <div className="mb-5 flex items-center justify-between animate-fade-in">
       <div className="flex items-center gap-3">
         {icon && (
-          <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-brand-100 text-brand-600 dark:bg-brand-900/40 dark:text-brand-300">
+          <div
+            className="flex h-11 w-11 items-center justify-center rounded-2xl text-neon-purple"
+            style={{
+              background: 'rgba(155,92,255,0.12)',
+              border: '1px solid rgba(155,92,255,0.25)',
+              boxShadow: '0 0 16px rgba(155,92,255,0.3), inset 0 1px 1px rgba(255,255,255,0.1)',
+            }}
+          >
             {icon}
           </div>
         )}
         <div>
-          <h1 className="text-xl font-extrabold tracking-tight sm:text-2xl">{title}</h1>
+          <h1 className="text-2xl font-extrabold tracking-tight text-white">{title}</h1>
           {subtitle && (
-            <p className="text-sm text-slate-500 dark:text-slate-400">{subtitle}</p>
+            <p className="text-sm text-white/50">{subtitle}</p>
           )}
         </div>
       </div>

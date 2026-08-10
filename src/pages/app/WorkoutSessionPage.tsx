@@ -5,7 +5,9 @@ import {
   SkipForward, Coffee, Plus, Minus, Flag,
 } from 'lucide-react';
 import { AppShell } from '../../components/layout/AppShell';
+import { GlassCard } from '../../components/ui/GlassCard';
 import { Modal } from '../../components/ui/Modal';
+import { ActivityRing } from '../../components/ui/ActivityRing';
 import { useStopwatch, useCountdown } from '../../hooks/useTimers';
 import { useAuth } from '../../store/auth';
 import { findRoutine, findExercise } from '../../data/seed';
@@ -52,7 +54,7 @@ export function WorkoutSessionPage() {
   if (!routine || !profile) {
     return (
       <AppShell showNav={false}>
-        <div className="text-center text-slate-500">Rutina no encontrada.</div>
+        <div className="text-center text-white/50">Rutina no encontrada.</div>
       </AppShell>
     );
   }
@@ -70,14 +72,13 @@ export function WorkoutSessionPage() {
   }, [currentIdx]);
 
   const completeSet = useCallback((setIdx: number) => {
+    const wasCompleted = currentLog.sets[setIdx].completado;
     setSets((prev) => {
       const copy = prev.map((e) => ({ ...e, sets: e.sets.map((s) => ({ ...s })) }));
-      const s = copy[currentIdx].sets[setIdx];
-      s.completado = !s.completado;
+      copy[currentIdx].sets[setIdx].completado = !copy[currentIdx].sets[setIdx].completado;
       return copy;
     });
-    // Iniciar descanso si se completó
-    if (!currentLog.sets[setIdx].completado) {
+    if (!wasCompleted) {
       const restSec = current.descanso_seg;
       setShowRest(true);
       restTimer.start(restSec);
@@ -112,14 +113,10 @@ export function WorkoutSessionPage() {
     workout.xp_ganado = xp;
     workoutsRepo.save(profile.id, workout);
 
-    // Actualizar XP del perfil
     useAuth.getState().updateProfile({ xp: profile.xp + xp });
     refresh();
-
-    // Verificar logros
     checkAchievements(profile.id, useAuth.getState().profile!, [workout, ...workoutsRepo.list(profile.id)]);
 
-    // Actualizar peso actual si el usuario registró pesos (lo dejamos igual)
     setShowFinishConfirm(false);
     setShowSummary({ xp, duration: duracion_seg });
   }, [stopwatch.elapsed, profile, routine, sets, refresh]);
@@ -128,7 +125,6 @@ export function WorkoutSessionPage() {
     nav(-1);
   }, [nav]);
 
-  // Resumen
   if (showSummary) {
     return <SummaryView
       xp={showSummary.xp}
@@ -143,6 +139,8 @@ export function WorkoutSessionPage() {
   const completedSets = currentLog.sets.filter((s) => s.completado).length;
   const totalSets = currentLog.sets.length;
   const allExercisesDone = sets.every((e) => e.sets.every((s) => s.completado));
+  const overallProgress = (sets.reduce((a, e) => a + e.sets.filter((s) => s.completado).length, 0) /
+    sets.reduce((a, e) => a + e.sets.length, 0)) * 100;
 
   return (
     <AppShell showNav={false}>
@@ -150,15 +148,17 @@ export function WorkoutSessionPage() {
       <div className="mb-3 flex items-center justify-between">
         <button
           onClick={cancelWorkout}
-          className="inline-flex items-center gap-1 text-sm font-medium text-slate-500"
+          className="inline-flex items-center gap-1 text-sm font-medium text-white/60 hover:text-white transition"
         >
           <ArrowLeft size={16} /> Salir
         </button>
         <div className="flex items-center gap-2">
-          <span className="font-mono text-lg font-bold tabular-nums">{formatDuration(stopwatch.elapsed)}</span>
+          <span className="font-mono text-lg font-bold tabular-nums text-neon-purple" style={{ textShadow: '0 0 12px rgba(155,92,255,0.6)' }}>
+            {formatDuration(stopwatch.elapsed)}
+          </span>
           <button
             onClick={() => (stopwatch.running ? stopwatch.pause() : stopwatch.resume())}
-            className="rounded-full bg-slate-100 p-2 dark:bg-slate-800"
+            className="flex h-9 w-9 items-center justify-center rounded-full bg-white/8 text-white/70 backdrop-blur transition hover:bg-white/15"
             aria-label={stopwatch.running ? 'Pausar' : 'Continuar'}
           >
             {stopwatch.running ? <Pause size={16} /> : <Play size={16} />}
@@ -166,59 +166,80 @@ export function WorkoutSessionPage() {
         </div>
       </div>
 
-      {/* Progreso entre ejercicios */}
-      <div className="mb-4">
-        <div className="mb-1 flex items-center justify-between text-xs">
-          <span className="font-medium text-slate-500">
-            Ejercicio {currentIdx + 1} de {sortedExercises.length}
-          </span>
-          <span className="font-bold text-brand-600">
-            {Math.round(((currentIdx) / sortedExercises.length) * 100)}%
-          </span>
+      {/* Progreso global con anillo */}
+      <GlassCard variant="purple" glow className="mb-4 p-4">
+        <div className="flex items-center justify-between gap-4">
+          <div className="flex-1">
+            <p className="text-xs font-semibold uppercase tracking-wide text-neon-purple">Progreso total</p>
+            <p className="text-2xl font-extrabold text-white">
+              {Math.round(overallProgress)}<span className="text-base text-white/40">%</span>
+            </p>
+            <p className="text-xs text-white/50">
+              Ejercicio {currentIdx + 1} de {sortedExercises.length}
+            </p>
+          </div>
+          <ActivityRing
+            value={overallProgress}
+            size={80}
+            stroke={8}
+            gradientFrom="#9B5CFF"
+            gradientTo="#00BFFF"
+            glowColor="rgba(155, 92, 255, 0.6)"
+          >
+            <span className="text-sm font-bold text-white">{Math.round(overallProgress)}%</span>
+          </ActivityRing>
         </div>
-        <div className="h-1.5 w-full overflow-hidden rounded-full bg-slate-200 dark:bg-slate-700">
-          <div
-            className="h-full rounded-full bg-brand-500 transition-all"
-            style={{ width: `${(currentIdx / sortedExercises.length) * 100}%` }}
-          />
-        </div>
-      </div>
+      </GlassCard>
 
       {/* Tarjeta del ejercicio actual */}
-      <div className="card mb-4">
-        <p className="text-xs font-semibold uppercase tracking-wide text-brand-600">{exercise?.musculos.join(' · ')}</p>
-        <h2 className="text-xl font-extrabold">{exercise?.nombre}</h2>
-        <p className="mt-1 text-xs text-slate-500">
+      <GlassCard variant="strong" className="mb-4 p-5">
+        <p className="text-xs font-semibold uppercase tracking-wide text-neon-pink">
+          {exercise?.musculos.join(' · ')}
+        </p>
+        <h2 className="mt-1 text-2xl font-extrabold text-white">{exercise?.nombre}</h2>
+        <p className="mt-1 text-sm text-white/50">
           {current.series} series × {current.repeticiones ?? `${current.duracion_seg}s`} · descanso {current.descanso_seg}s
         </p>
 
-        <div className="mt-3 flex items-center justify-between rounded-2xl bg-slate-50 p-3 dark:bg-slate-800/50">
-          <span className="text-sm font-medium">Series completadas</span>
-          <span className="font-bold">{completedSets}/{totalSets}</span>
+        <div
+          className="mt-3 flex items-center justify-between rounded-2xl p-3"
+          style={{
+            background: 'rgba(255,255,255,0.04)',
+            border: '1px solid rgba(255,255,255,0.08)',
+          }}
+        >
+          <span className="text-sm font-medium text-white/70">Series completadas</span>
+          <span className="font-bold text-neon-green" style={{ textShadow: '0 0 8px rgba(0,255,133,0.5)' }}>
+            {completedSets}/{totalSets}
+          </span>
         </div>
-      </div>
+      </GlassCard>
 
       {/* Lista de series */}
       <div className="space-y-2">
         {currentLog.sets.map((s, idx) => (
-          <div
+          <GlassCard
             key={idx}
-            className={`card p-3 transition ${
-              s.completado ? 'border-2 border-green-500 bg-green-50 dark:bg-green-900/20' : ''
-            }`}
+            className={`p-3 transition-all ${s.completado ? 'glass-green' : ''}`}
           >
             <div className="flex items-center justify-between">
-              <span className="font-bold">Serie {s.numero}</span>
+              <span className="font-bold text-white">Serie {s.numero}</span>
               <button
                 onClick={() => completeSet(idx)}
-                className={`flex h-9 w-9 items-center justify-center rounded-full transition ${
-                  s.completado
-                    ? 'bg-green-500 text-white'
-                    : 'bg-slate-200 text-slate-500 dark:bg-slate-700'
+                className={`flex h-10 w-10 items-center justify-center rounded-full transition-all active:scale-90 ${
+                  s.completado ? 'animate-pop' : ''
                 }`}
+                style={{
+                  background: s.completado
+                    ? 'linear-gradient(135deg, #00FF85, #00BFFF)'
+                    : 'rgba(255,255,255,0.08)',
+                  color: s.completado ? '#050507' : 'rgba(255,255,255,0.5)',
+                  border: s.completado ? '1px solid rgba(255,255,255,0.3)' : '1px solid rgba(255,255,255,0.12)',
+                  boxShadow: s.completado ? '0 0 16px rgba(0,255,133,0.5)' : 'none',
+                }}
                 aria-label={s.completado ? 'Desmarcar' : 'Completar serie'}
               >
-                <Check size={18} strokeWidth={3} />
+                <Check size={20} strokeWidth={3} />
               </button>
             </div>
             <div className="mt-2 flex gap-2">
@@ -237,7 +258,7 @@ export function WorkoutSessionPage() {
                 disabled={s.completado}
               />
             </div>
-          </div>
+          </GlassCard>
         ))}
       </div>
 
@@ -246,20 +267,20 @@ export function WorkoutSessionPage() {
         <button
           onClick={goPrev}
           disabled={currentIdx === 0}
-          className="btn-secondary flex-1"
+          className="btn-glass flex-1"
         >
-          <ChevronLeft size={20} /> Anterior
+          <ChevronLeft size={20} /> Ant.
         </button>
         <button
           onClick={() => setShowFinishConfirm(true)}
-          className="btn-secondary"
+          className="btn-glass"
           aria-label="Finalizar"
         >
           <Flag size={20} />
         </button>
         <button
           onClick={goNext}
-          className="btn-primary flex-[2]"
+          className="btn-primary flex-[2] shadow-glow-purple"
         >
           {currentIdx < sortedExercises.length - 1 ? (
             <>Siguiente <ChevronRight size={20} /></>
@@ -284,16 +305,16 @@ export function WorkoutSessionPage() {
       {/* Modal confirmar finalizar */}
       <Modal open={showFinishConfirm} onClose={() => setShowFinishConfirm(false)} title="Finalizar entrenamiento">
         <div className="space-y-3">
-          <p className="text-sm text-slate-600 dark:text-slate-300">
+          <p className="text-sm text-white/70">
             {allExercisesDone
               ? '¡Has completado todos los ejercicios! ¿Querés finalizar el entrenamiento?'
               : 'Aún quedan series sin completar. ¿Seguro que querés finalizar?'}
           </p>
           <div className="flex gap-2">
-            <button onClick={() => setShowFinishConfirm(false)} className="btn-secondary flex-1">
-              Seguir entrenando
+            <button onClick={() => setShowFinishConfirm(false)} className="btn-glass flex-1">
+              Seguir
             </button>
-            <button onClick={finishWorkout} className="btn-primary flex-1">
+            <button onClick={finishWorkout} className="btn-success flex-1">
               Finalizar
             </button>
           </div>
@@ -308,13 +329,13 @@ function NumberStepper({
 }: { label: string; value: number; onChange: (v: number) => void; step?: number; disabled?: boolean }) {
   return (
     <div className="flex-1">
-      <label className="mb-1 block text-xs text-slate-500">{label}</label>
+      <label className="mb-1 block text-xs text-white/50">{label}</label>
       <div className="flex items-center gap-1">
         <button
           type="button"
           disabled={disabled}
           onClick={() => onChange(Math.max(0, +(value - step).toFixed(2)))}
-          className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-100 text-slate-600 disabled:opacity-50 dark:bg-slate-800 dark:text-slate-300"
+          className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/8 text-white/60 disabled:opacity-40"
         >
           <Minus size={16} />
         </button>
@@ -323,13 +344,13 @@ function NumberStepper({
           value={value}
           disabled={disabled}
           onChange={(e) => onChange(+e.target.value || 0)}
-          className="input h-10 text-center"
+          className="input-glass h-10 text-center"
         />
         <button
           type="button"
           disabled={disabled}
           onClick={() => onChange(+(value + step).toFixed(2))}
-          className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-100 text-slate-600 disabled:opacity-50 dark:bg-slate-800 dark:text-slate-300"
+          className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/8 text-white/60 disabled:opacity-40"
         >
           <Plus size={16} />
         </button>
@@ -345,23 +366,38 @@ function RestView({
   onSkip: () => void; onAdd: (s: number) => void;
   onPause: () => void; onResume: () => void;
 }) {
+  const total = 60; // baseline para el anillo
+  const pct = Math.min(100, (seconds / total) * 100);
   const mm = Math.floor(seconds / 60).toString().padStart(2, '0');
   const ss = Math.floor(seconds % 60).toString().padStart(2, '0');
+
   return (
     <div className="text-center">
-      <div className="mx-auto mb-4 flex h-32 w-32 items-center justify-center rounded-full bg-brand-100 dark:bg-brand-900/30">
-        <Coffee size={48} className="text-brand-600" />
-      </div>
-      <p className="mb-1 text-sm font-medium text-slate-500">Tiempo de descanso</p>
-      <p className="mb-5 font-mono text-5xl font-extrabold tabular-nums">{mm}:{ss}</p>
-      <div className="flex justify-center gap-2">
-        <button onClick={() => onAdd(15)} className="btn-secondary">+15s</button>
+      <ActivityRing
+        value={pct}
+        size={200}
+        stroke={14}
+        gradientFrom="#9B5CFF"
+        gradientTo="#00BFFF"
+        glowColor="rgba(0, 191, 255, 0.6)"
+      >
+        <Coffee size={32} className="mx-auto mb-1 text-neon-blue" />
+        <p className="text-xs text-white/50">Descanso</p>
+        <p className="font-mono text-4xl font-extrabold text-white" style={{ textShadow: '0 0 16px rgba(0,191,255,0.6)' }}>
+          {mm}:{ss}
+        </p>
+      </ActivityRing>
+
+      <div className="mt-6 flex justify-center gap-2">
+        <button onClick={() => onAdd(15)} className="btn-glass">+15s</button>
         {running ? (
-          <button onClick={onPause} className="btn-secondary"><Pause size={16} /> Pausar</button>
+          <button onClick={onPause} className="btn-glass"><Pause size={16} /> Pausar</button>
         ) : (
-          <button onClick={onResume} className="btn-secondary"><Play size={16} /> Continuar</button>
+          <button onClick={onResume} className="btn-glass"><Play size={16} /> Continuar</button>
         )}
-        <button onClick={onSkip} className="btn-primary"><SkipForward size={16} /> Saltar</button>
+        <button onClick={onSkip} className="btn-primary shadow-glow-purple">
+          <SkipForward size={16} /> Saltar
+        </button>
       </div>
     </div>
   );
@@ -374,10 +410,10 @@ function SummaryView({
 }) {
   return (
     <AppShell showNav={false}>
-      <div className="flex min-h-[70vh] flex-col items-center justify-center text-center animate-pop">
-        <div className="mb-3 text-6xl">🎉</div>
-        <h1 className="text-2xl font-extrabold">¡Entrenamiento completado!</h1>
-        <p className="mt-1 text-slate-500">Lo lograste, seguí así.</p>
+      <div className="flex min-h-[70vh] flex-col items-center justify-center text-center">
+        <div className="mb-3 text-7xl animate-pop">🎉</div>
+        <h1 className="text-2xl font-extrabold text-white">¡Entrenamiento completado!</h1>
+        <p className="mt-1 text-white/50">Lo lograste, seguí así.</p>
 
         <div className="my-6 grid w-full grid-cols-2 gap-3">
           <SummaryStat icon="⏱️" label="Duración" value={formatDuration(duration)} />
@@ -386,12 +422,16 @@ function SummaryView({
           <SummaryStat icon="🔢" label="Repeticiones" value={`${totalReps}`} />
         </div>
 
-        <div className="card w-full border-2 border-amber-400 bg-amber-50 dark:bg-amber-900/20">
-          <p className="text-sm text-amber-700 dark:text-amber-300">XP ganado</p>
-          <p className="text-3xl font-extrabold text-amber-600">+{xp} XP</p>
-        </div>
+        <GlassCard
+          variant="purple"
+          glow
+          className="w-full p-5 animate-pulse-glow"
+        >
+          <p className="text-sm text-neon-purple">XP ganado</p>
+          <p className="text-4xl font-extrabold text-gradient-purple">+{xp} XP</p>
+        </GlassCard>
 
-        <button onClick={onClose} className="btn-primary mt-6 w-full">
+        <button onClick={onClose} className="btn-primary mt-6 w-full shadow-glow-purple">
           Ver historial
         </button>
       </div>
@@ -401,10 +441,10 @@ function SummaryView({
 
 function SummaryStat({ icon, label, value }: { icon: string; label: string; value: string }) {
   return (
-    <div className="card flex flex-col items-center gap-1 p-3">
+    <GlassCard className="flex flex-col items-center gap-1 p-3">
       <span className="text-2xl">{icon}</span>
-      <p className="text-lg font-extrabold leading-none">{value}</p>
-      <p className="text-[10px] text-slate-500">{label}</p>
-    </div>
+      <p className="text-lg font-extrabold leading-none text-white">{value}</p>
+      <p className="text-[10px] text-white/50">{label}</p>
+    </GlassCard>
   );
 }

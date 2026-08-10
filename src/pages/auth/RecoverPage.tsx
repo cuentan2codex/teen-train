@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Mail, Lock } from 'lucide-react';
+import { Mail, Lock, ArrowRight } from 'lucide-react';
 import { auth } from '../../services/database';
+import { GlassCard } from '../../components/ui/GlassCard';
 
 export function RecoverPage() {
   const nav = useNavigate();
@@ -29,58 +30,63 @@ export function RecoverPage() {
   if (done) {
     return (
       <div className="mx-auto max-w-md px-5 py-10 text-center">
-        <div className="mb-3 text-5xl">✅</div>
-        <h1 className="text-xl font-bold">Contraseña restablecida</h1>
-        <p className="mt-2 text-sm text-slate-500">Iniciando sesión…</p>
+        <div className="mb-3 text-6xl animate-pop">✅</div>
+        <h1 className="text-xl font-bold text-white">Contraseña restablecida</h1>
+        <p className="mt-2 text-sm text-white/50">Iniciando sesión…</p>
       </div>
     );
   }
 
   return (
     <div className="mx-auto max-w-md px-5 py-6">
-      <h1 className="mb-2 text-2xl font-extrabold">Recuperar contraseña</h1>
-      <p className="mb-6 text-sm text-slate-500">
+      <h1 className="mb-2 text-2xl font-extrabold text-white">Recuperar contraseña</h1>
+      <p className="mb-6 text-sm text-white/50">
         Ingresa tu correo y una nueva contraseña. Los datos se restablecerán en este dispositivo.
       </p>
-      <form onSubmit={submit} className="space-y-4">
-        <div>
-          <label className="label">Correo</label>
-          <div className="relative">
-            <Mail size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-            <input
-              type="email"
-              required
-              className="input pl-10"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
+      <GlassCard variant="strong" glow className="p-5">
+        <form onSubmit={submit} className="space-y-4">
+          <div>
+            <label className="label-glass">Correo</label>
+            <div className="relative">
+              <Mail size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/40" />
+              <input
+                type="email"
+                required
+                className="input-glass pl-11"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
           </div>
-        </div>
-        <div>
-          <label className="label">Nueva contraseña</label>
-          <div className="relative">
-            <Lock size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-            <input
-              type="password"
-              required
-              minLength={6}
-              className="input pl-10"
-              value={newPass}
-              onChange={(e) => setNewPass(e.target.value)}
-            />
+          <div>
+            <label className="label-glass">Nueva contraseña</label>
+            <div className="relative">
+              <Lock size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/40" />
+              <input
+                type="password"
+                required
+                minLength={6}
+                className="input-glass pl-11"
+                value={newPass}
+                onChange={(e) => setNewPass(e.target.value)}
+              />
+            </div>
           </div>
-        </div>
-        {error && (
-          <div className="rounded-2xl bg-red-50 px-4 py-3 text-sm font-medium text-red-700 dark:bg-red-900/30 dark:text-red-300">
-            {error}
-          </div>
-        )}
-        <button className="btn-primary w-full" disabled={loading}>
-          {loading ? 'Restableciendo…' : 'Restablecer'}
-        </button>
-      </form>
+          {error && (
+            <div
+              className="rounded-2xl px-4 py-3 text-sm font-medium text-neon-pink"
+              style={{ background: 'rgba(255,61,141,0.1)', border: '1px solid rgba(255,61,141,0.3)' }}
+            >
+              {error}
+            </div>
+          )}
+          <button className="btn-primary w-full py-4" disabled={loading}>
+            {loading ? 'Restableciendo…' : <>Restablecer <ArrowRight size={20} /></>}
+          </button>
+        </form>
+      </GlassCard>
       <div className="mt-6 text-center text-sm">
-        <Link to="/login" className="font-semibold text-brand-600 hover:underline">
+        <Link to="/login" className="font-semibold text-neon-purple hover:text-neon-pink transition">
           Volver a iniciar sesión
         </Link>
       </div>

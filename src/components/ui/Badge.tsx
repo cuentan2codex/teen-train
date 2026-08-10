@@ -3,26 +3,33 @@ import { clsx } from 'clsx';
 
 interface Props {
   children: ReactNode;
-  variant?: 'default' | 'success' | 'warning' | 'danger' | 'info';
+  variant?: 'default' | 'success' | 'warning' | 'danger' | 'info' | 'purple' | 'pink';
   className?: string;
+  glow?: boolean;
 }
 
-const styles: Record<NonNullable<Props['variant']>, string> = {
-  default: 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200',
-  success: 'bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300',
-  warning: 'bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300',
-  danger: 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300',
-  info: 'bg-brand-100 text-brand-700 dark:bg-brand-900/40 dark:text-brand-300',
+const styles: Record<NonNullable<Props['variant']>, { bg: string; text: string; border: string }> = {
+  default: { bg: 'rgba(255,255,255,0.06)', text: '#E0E0E0', border: 'rgba(255,255,255,0.12)' },
+  success: { bg: 'rgba(0,255,133,0.12)', text: '#00FF85', border: 'rgba(0,255,133,0.3)' },
+  warning: { bg: 'rgba(255,158,61,0.12)', text: '#FF9E3D', border: 'rgba(255,158,61,0.3)' },
+  danger: { bg: 'rgba(255,61,141,0.12)', text: '#FF3D8D', border: 'rgba(255,61,141,0.3)' },
+  info: { bg: 'rgba(0,191,255,0.12)', text: '#00BFFF', border: 'rgba(0,191,255,0.3)' },
+  purple: { bg: 'rgba(155,92,255,0.12)', text: '#9B5CFF', border: 'rgba(155,92,255,0.3)' },
+  pink: { bg: 'rgba(255,61,141,0.12)', text: '#FF3D8D', border: 'rgba(255,61,141,0.3)' },
 };
 
-export function Badge({ children, variant = 'default', className }: Props) {
+export function Badge({ children, variant = 'default', className, glow = false }: Props) {
+  const s = styles[variant];
   return (
     <span
-      className={clsx(
-        'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold',
-        styles[variant],
-        className,
-      )}
+      className={clsx('inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-semibold', className)}
+      style={{
+        background: s.bg,
+        color: s.text,
+        border: `1px solid ${s.border}`,
+        boxShadow: glow ? `0 0 12px ${s.border}` : undefined,
+        backdropFilter: 'blur(8px)',
+      }}
     >
       {children}
     </span>
