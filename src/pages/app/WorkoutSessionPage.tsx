@@ -226,8 +226,8 @@ export function WorkoutSessionPage() {
               <span className="font-bold text-white">Serie {s.numero}</span>
               <button
                 onClick={() => completeSet(idx)}
-                className={`flex h-10 w-10 items-center justify-center rounded-full transition-all active:scale-90 ${
-                  s.completado ? 'animate-pop' : ''
+                className={`jelly flex h-10 w-10 items-center justify-center rounded-full ${
+                  s.completado ? 'animate-series-complete' : ''
                 }`}
                 style={{
                   background: s.completado
@@ -428,7 +428,7 @@ function SummaryView({
           className="w-full p-5 animate-pulse-glow"
         >
           <p className="text-sm text-neon-purple">XP ganado</p>
-          <p className="text-4xl font-extrabold text-gradient-purple">+{xp} XP</p>
+          <p className="text-4xl font-extrabold text-gradient-purple animate-xp-burst">+{xp} XP</p>
         </GlassCard>
 
         <button onClick={onClose} className="btn-primary mt-6 w-full shadow-glow-purple">

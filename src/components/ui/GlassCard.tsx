@@ -13,8 +13,8 @@ interface GlassCardProps {
 
 // Tarjeta de vidrio líquido reutilizable.
 // variant: controla intensidad y color del glow.
-// glow: añade borde luminoso gradiente que recorre el perímetro.
-// interactive: añade animación de hundido al tocar.
+// glow: borde luminoso gradiente.
+// interactive: añade animación gelatinosa al tocar (compresión + leve elevación).
 export function GlassCard({
   children,
   className,
@@ -40,7 +40,7 @@ export function GlassCard({
         'glass',
         variantClass,
         glow && 'glass-glow',
-        interactive && 'transition-all duration-200 active:scale-[0.98]',
+        interactive && 'glass-interactive',
         className,
       )}
       style={style}
