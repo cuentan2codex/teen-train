@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
-import { AnimatePresence, motion } from 'framer-motion';
 import { useAuth } from './store/auth';
 import { AppBackground } from './components/layout/AppBackground';
 import { LoginPage } from './pages/auth/LoginPage';
@@ -34,61 +33,10 @@ function Public({ children }: { children: JSX.Element }) {
   return children;
 }
 
-/**
- * Wraps each page route with a soft liquid page transition.
- * Pages enter with a subtle scale+fade from below, connected
- * to the nav indicator's movement.
- */
-function PageTransition({ children }: { children: JSX.Element }) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 14, scale: 0.995 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      exit={{ opacity: 0, y: -10, scale: 0.998 }}
-      transition={{
-        type: 'spring',
-        stiffness: 260,
-        damping: 28,
-        mass: 0.8,
-      }}
-    >
-      {children}
-    </motion.div>
-  );
-}
-
-function AnimatedRoutes() {
-  const location = useLocation();
-  return (
-    <AnimatePresence mode="wait">
-      <Routes location={location} key={location.pathname}>
-        <Route path="/login" element={<Public><PageTransition><LoginPage /></PageTransition></Public>} />
-        <Route path="/registro" element={<Public><PageTransition><RegisterPage /></PageTransition></Public>} />
-        <Route path="/recuperar" element={<Public><PageTransition><RecoverPage /></PageTransition></Public>} />
-
-        <Route path="/" element={<Protected><PageTransition><DashboardPage /></PageTransition></Protected>} />
-        <Route path="/entrenar" element={<Protected><PageTransition><RoutinesPage /></PageTransition></Protected>} />
-        <Route path="/rutina/:id" element={<Protected><PageTransition><RoutineDetailPage /></PageTransition></Protected>} />
-        <Route path="/ejercicios" element={<Protected><PageTransition><CatalogPage /></PageTransition></Protected>} />
-        <Route path="/ejercicio/:id" element={<Protected><PageTransition><ExerciseDetailPage /></PageTransition></Protected>} />
-        <Route path="/entrenar/sesion/:id" element={<Protected><PageTransition><WorkoutSessionPage /></PageTransition></Protected>} />
-        <Route path="/historial" element={<Protected><PageTransition><HistoryPage /></PageTransition></Protected>} />
-        <Route path="/historial/:id" element={<Protected><PageTransition><WorkoutDetailPage /></PageTransition></Protected>} />
-        <Route path="/progreso" element={<Protected><PageTransition><ProgressPage /></PageTransition></Protected>} />
-        <Route path="/perfil" element={<Protected><PageTransition><ProfilePage /></PageTransition></Protected>} />
-        <Route path="/configuracion" element={<Protected><PageTransition><SettingsPage /></PageTransition></Protected>} />
-
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
-    </AnimatePresence>
-  );
-}
-
 export default function App() {
   const { init } = useAuth();
   useEffect(() => {
     init();
-    // Escuchar cambios de tema del sistema
     const mq = window.matchMedia('(prefers-color-scheme: dark)');
     const handler = () => {
       const { profile } = useAuth.getState();
@@ -103,7 +51,25 @@ export default function App() {
   return (
     <BrowserRouter basename={import.meta.env.BASE_URL.replace(/\/$/, '')}>
       <AppBackground />
-      <AnimatedRoutes />
+      <Routes>
+        <Route path="/login" element={<Public><LoginPage /></Public>} />
+        <Route path="/registro" element={<Public><RegisterPage /></Public>} />
+        <Route path="/recuperar" element={<Public><RecoverPage /></Public>} />
+
+        <Route path="/" element={<Protected><DashboardPage /></Protected>} />
+        <Route path="/entrenar" element={<Protected><RoutinesPage /></Protected>} />
+        <Route path="/rutina/:id" element={<Protected><RoutineDetailPage /></Protected>} />
+        <Route path="/ejercicios" element={<Protected><CatalogPage /></Protected>} />
+        <Route path="/ejercicio/:id" element={<Protected><ExerciseDetailPage /></Protected>} />
+        <Route path="/entrenar/sesion/:id" element={<Protected><WorkoutSessionPage /></Protected>} />
+        <Route path="/historial" element={<Protected><HistoryPage /></Protected>} />
+        <Route path="/historial/:id" element={<Protected><WorkoutDetailPage /></Protected>} />
+        <Route path="/progreso" element={<Protected><ProgressPage /></Protected>} />
+        <Route path="/perfil" element={<Protected><ProfilePage /></Protected>} />
+        <Route path="/configuracion" element={<Protected><SettingsPage /></Protected>} />
+
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
     </BrowserRouter>
   );
 }
