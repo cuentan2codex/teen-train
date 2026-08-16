@@ -39,6 +39,9 @@ function Public({ children }: { children: JSX.Element }) {
  * The nav is rendered OUTSIDE Routes so it persists across navigation.
  */
 const HIDE_NAV_ROUTES = [
+  '/login',
+  '/registro',
+  '/recuperar',
   '/configuracion',
   '/historial/',
   '/entrenar/sesion/',

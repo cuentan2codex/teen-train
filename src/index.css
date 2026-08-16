@@ -663,22 +663,154 @@ a:hover {
 
 /* --- Mejoras de hover con gelatina --- */
 
-/* Glass hover — breathe más rápido + jiggle */
+/* Glass hover — lift + glow + jiggle */
 .glass:hover {
   animation: jelly-jiggle 0.5s ease-in-out, jelly-breathe 2s ease-in-out infinite;
+  transform: translateY(-3px) scale(1.015);
+  box-shadow:
+    0 12px 40px rgba(0,0,0,0.5),
+    0 0 16px rgba(155, 92, 255, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.22);
+  transition: transform 0.35s var(--ease-jelly), box-shadow 0.35s var(--ease-smooth), border-color 0.35s var(--ease-quick);
 }
 
-/* Botones hover — jello */
+/* Grid stat tiles hover — bounce up */
+.grid > .glass:hover {
+  animation: jelly-jiggle 0.4s ease-in-out, jelly-breathe 2s ease-in-out infinite;
+  transform: translateY(-4px) scale(1.025);
+  box-shadow:
+    0 16px 48px rgba(0,0,0,0.55),
+    0 0 20px rgba(155, 92, 255, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  transition: transform 0.4s var(--ease-jelly), box-shadow 0.4s var(--ease-smooth);
+}
+
+/* Botones hover — jello + glow boost */
 .btn-primary:hover {
   animation: jelly-jello 0.6s ease-in-out, jelly-morph 2s ease-in-out infinite;
+  transform: translateY(-2px) scale(1.03);
+  box-shadow:
+    0 8px 28px rgba(155, 92, 255, 0.6),
+    0 0 32px rgba(155, 92, 255, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  filter: brightness(1.08);
+  transition: transform 0.35s var(--ease-jelly), box-shadow 0.35s var(--ease-smooth), filter 0.35s var(--ease-quick);
 }
 .btn-glass:hover {
   animation: jelly-jiggle 0.4s ease-in-out, jelly-breathe 2.5s ease-in-out infinite;
+  transform: translateY(-2px) scale(1.02);
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow:
+    0 8px 28px rgba(0,0,0,0.45),
+    0 0 12px rgba(155, 92, 255, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  transition: transform 0.35s var(--ease-jelly), box-shadow 0.35s var(--ease-smooth), background 0.35s var(--ease-quick);
+}
+.btn-success:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 8px 28px rgba(0, 255, 133, 0.5), 0 0 24px rgba(0, 255, 133, 0.2);
+  filter: brightness(1.08);
+  transition: transform 0.35s var(--ease-jelly), box-shadow 0.35s var(--ease-smooth), filter 0.35s var(--ease-quick);
+}
+.btn-danger:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 8px 28px rgba(255, 61, 141, 0.5), 0 0 24px rgba(255, 61, 141, 0.2);
+  filter: brightness(1.08);
+  transition: transform 0.35s var(--ease-jelly), box-shadow 0.35s var(--ease-smooth), filter 0.35s var(--ease-quick);
+}
+.btn-ghost:hover {
+  animation: jelly-jiggle 0.35s ease-in-out, jelly-ripple 2.5s ease-in-out infinite;
+  transform: translateY(-1px) scale(1.02);
+  color: var(--text-primary);
+  transition: transform 0.3s var(--ease-jelly), color 0.2s var(--ease-quick);
+}
+
+/* Input hover — subtle lift + glow */
+.input-glass:hover {
+  animation: jelly-morph 2.5s ease-in-out infinite;
+  border-color: rgba(155, 92, 255, 0.35);
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: 0 0 0 3px rgba(155, 92, 255, 0.08);
+  transition: border-color 0.3s var(--ease-quick), background 0.3s var(--ease-quick), box-shadow 0.3s var(--ease-quick);
 }
 
 /* Input focus — morph más pronunciado */
 .input-glass:focus {
   animation: jelly-morph 2.5s ease-in-out infinite;
+}
+
+/* Links hover — jiggle + color shift */
+a:hover {
+  animation: jelly-jiggle 0.4s ease-in-out;
+  transform: translateY(-1px);
+  transition: transform 0.3s var(--ease-jelly), color 0.2s var(--ease-quick);
+}
+
+/* Icon containers hover — bounce */
+[class*="items-center"][class*="justify-center"][class*="rounded-2xl"]:hover {
+  animation: jelly-jiggle 0.4s ease-in-out, jelly-wobble 3s ease-in-out infinite;
+  transform: scale(1.08) translateY(-2px);
+  transition: transform 0.35s var(--ease-jelly);
+}
+[class*="items-center"][class*="justify-center"][class*="rounded-xl"]:hover {
+  animation: jelly-jiggle 0.4s ease-in-out, jelly-wobble 3.5s ease-in-out infinite;
+  transform: scale(1.1) translateY(-2px);
+  transition: transform 0.35s var(--ease-jelly);
+}
+
+/* Chips/badges hover */
+.rounded-full:hover {
+  animation: jelly-jiggle 0.35s ease-in-out, jelly-ripple 2.5s ease-in-out infinite;
+  transform: scale(1.06) translateY(-1px);
+  transition: transform 0.3s var(--ease-jelly);
+}
+
+/* Labels hover */
+.label-glass:hover {
+  animation: jelly-jiggle 0.3s ease-in-out, jelly-wobble 4s ease-in-out infinite;
+  transform: translateX(3px);
+  color: var(--text-primary);
+  transition: transform 0.3s var(--ease-jelly), color 0.2s var(--ease-quick);
+}
+
+/* Text with opacity — subtle float on hover */
+.text-white\/50:hover {
+  animation: none;
+  transform: translateY(-1px);
+  color: rgba(255, 255, 255, 0.65);
+  transition: transform 0.3s var(--ease-smooth), color 0.3s var(--ease-quick);
+}
+.text-white\/30:hover {
+  animation: none;
+  transform: translateY(-1px);
+  color: rgba(255, 255, 255, 0.45);
+  transition: transform 0.3s var(--ease-smooth), color 0.3s var(--ease-quick);
+}
+.text-white\/40:hover {
+  transform: translateY(-1px);
+  color: rgba(255, 255, 255, 0.55);
+  transition: transform 0.3s var(--ease-smooth), color 0.3s var(--ease-quick);
+}
+
+/* Nav items hover — enhanced */
+.nav-item:hover {
+  animation: jelly-jiggle 0.35s ease-in-out, jelly-ripple 2s ease-in-out infinite;
+}
+
+/* Select dropdowns hover */
+select.input-glass:hover {
+  animation: jelly-morph 3s ease-in-out infinite;
+  border-color: rgba(155, 92, 255, 0.35);
+  transition: border-color 0.3s var(--ease-quick);
+}
+
+/* Lucide icons — glow on parent hover */
+.lucide {
+  transition: transform 0.3s var(--ease-jelly), filter 0.3s var(--ease-quick);
+}
+:hover > .lucide {
+  filter: drop-shadow(0 0 4px rgba(155, 92, 255, 0.5));
 }
 
 /* --- Elementos específicos de la app --- */

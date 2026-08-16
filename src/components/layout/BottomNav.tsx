@@ -66,9 +66,9 @@ export function BottomNav() {
                   }}
                   transition={{
                     type: 'spring',
-                    stiffness: 350,
-                    damping: 30,
-                    mass: 0.8,
+                    stiffness: 180,
+                    damping: 12,
+                    mass: 1.2,
                   }}
                 >
                   {/* Glass highlight */}
@@ -89,7 +89,8 @@ export function BottomNav() {
                     ? 'drop-shadow(0 0 6px rgba(155, 92, 255, 0.8))'
                     : 'drop-shadow(0 0 0px transparent)',
                 }}
-                transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+                whileHover={{ scale: 1.15, y: -2 }}
+                transition={{ type: 'spring', stiffness: 300, damping: 15, mass: 0.6 }}
               >
                 <NavIcon
                   size={22}
@@ -98,13 +99,13 @@ export function BottomNav() {
               </motion.div>
               <motion.span
                 animate={{
-                  scale: isActive ? [1, 1.03, 0.98, 1] : 1,
+                  scale: isActive ? [1, 1.04, 0.97, 1.02, 0.99, 1] : 1,
                 }}
                 transition={{
-                  duration: 2.5,
+                  duration: 3,
                   repeat: Infinity,
                   ease: 'easeInOut',
-                  repeatDelay: 1,
+                  repeatDelay: 0.8,
                 }}
               >
                 {it.label}

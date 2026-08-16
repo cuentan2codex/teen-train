@@ -177,6 +177,11 @@ export function GlassCard({
       }}
       onClick={onClick}
       {...liquid.handlers}
+      whileHover={{
+        scale: 1.02,
+        y: -2,
+        boxShadow: '0 12px 40px rgba(0,0,0,0.5), 0 0 20px rgba(155,92,255,0.2)',
+      }}
       animate={{
         ...liquid.motionStyle,
         // Jelly idle oscillation when not pressed
