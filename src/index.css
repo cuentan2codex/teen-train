@@ -446,47 +446,58 @@ body {
 
 /* --- Keyframes de gelatina --- */
 
-/* Respiración sutil — escala 1→1.018→1 (cards, glass, containers) */
+/* Respiración — escala pronunciada y lenta (cards, glass, containers) */
 @keyframes jelly-breathe {
   0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.018); }
+  25% { transform: scale(1.025); }
+  50% { transform: scale(1.035); }
+  75% { transform: scale(1.015); }
 }
 
 /* Wobble con rotación — para iconos, badges, chips, avatars */
 @keyframes jelly-wobble {
   0%, 100% { transform: rotate(0deg) scale(1); }
-  25% { transform: rotate(0.8deg) scale(1.012); }
-  75% { transform: rotate(-0.8deg) scale(1.012); }
+  20% { transform: rotate(1.5deg) scale(1.03); }
+  40% { transform: rotate(0deg) scale(1.02); }
+  60% { transform: rotate(-1.5deg) scale(1.03); }
+  80% { transform: rotate(0deg) scale(1.02); }
 }
 
 /* Morph squash/stretch — para botones e inputs */
 @keyframes jelly-morph {
   0%, 100% { transform: scaleX(1) scaleY(1); }
-  33% { transform: scaleX(1.012) scaleY(0.988); }
-  66% { transform: scaleX(0.988) scaleY(1.012); }
+  25% { transform: scaleX(1.025) scaleY(0.975); }
+  50% { transform: scaleX(0.975) scaleY(1.025); }
+  75% { transform: scaleX(1.018) scaleY(0.982); }
 }
 
 /* Jello clásico — para logo, hero, h1 */
 @keyframes jelly-jello {
   0%, 100% { transform: scale(1, 1); }
-  25% { transform: scale(0.98, 1.02); }
-  50% { transform: scale(1.02, 0.98); }
+  15% { transform: scale(0.96, 1.04); }
+  30% { transform: scale(1.04, 0.96); }
+  45% { transform: scale(0.97, 1.03); }
+  60% { transform: scale(1.03, 0.97); }
   75% { transform: scale(0.99, 1.01); }
+  85% { transform: scale(1.01, 0.99); }
 }
 
-/* Ripple de escala sutil — para nav items, links */
+/* Ripple de escala — para nav items, links */
 @keyframes jelly-ripple {
   0%, 100% { transform: scale(1); }
-  30% { transform: scale(1.025); }
-  60% { transform: scale(0.985); }
+  20% { transform: scale(1.045); }
+  40% { transform: scale(0.97); }
+  60% { transform: scale(1.025); }
+  80% { transform: scale(0.99); }
 }
 
 /* Float gelatinoso con squash — para blobs, hero icon */
 @keyframes jelly-float {
   0%, 100% { transform: translateY(0) scaleX(1) scaleY(1); }
-  25% { transform: translateY(-3px) scaleX(1.01) scaleY(0.99); }
-  50% { transform: translateY(-5px) scaleX(0.99) scaleY(1.01); }
-  75% { transform: translateY(-2px) scaleX(1.005) scaleY(0.995); }
+  20% { transform: translateY(-4px) scaleX(1.02) scaleY(0.98); }
+  40% { transform: translateY(-7px) scaleX(0.98) scaleY(1.02); }
+  60% { transform: translateY(-5px) scaleX(1.01) scaleY(0.99); }
+  80% { transform: translateY(-2px) scaleX(1.008) scaleY(0.992); }
 }
 
 /* Pulse glow con jelly — para elementos con glow */
@@ -495,26 +506,34 @@ body {
     transform: scale(1);
     filter: brightness(1);
   }
-  50% {
+  30% {
+    transform: scale(1.04);
+    filter: brightness(1.08);
+  }
+  60% {
     transform: scale(1.02);
-    filter: brightness(1.06);
+    filter: brightness(1.05);
   }
 }
 
-/* Jiggle hover — se activa solo en :hover */
+/* Jiggle hover — se activa solo en :hover, lento y pronunciado */
 @keyframes jelly-jiggle {
-  0% { transform: rotate(0deg); }
-  25% { transform: rotate(2deg); }
-  50% { transform: rotate(-2deg); }
-  75% { transform: rotate(1deg); }
-  100% { transform: rotate(0deg); }
+  0% { transform: rotate(0deg) scale(1); }
+  15% { transform: rotate(3deg) scale(1.02); }
+  30% { transform: rotate(-3deg) scale(0.98); }
+  45% { transform: rotate(2deg) scale(1.015); }
+  60% { transform: rotate(-2deg) scale(0.985); }
+  75% { transform: rotate(1deg) scale(1.005); }
+  90% { transform: rotate(-0.5deg) scale(0.998); }
+  100% { transform: rotate(0deg) scale(1); }
 }
 
 /* Bounce settle — para elementos que aparecen */
 @keyframes jelly-settle {
-  0% { transform: scale(0.95); }
-  40% { transform: scale(1.04); }
-  70% { transform: scale(0.98); }
+  0% { transform: scale(0.9); }
+  25% { transform: scale(1.06); }
+  50% { transform: scale(0.96); }
+  75% { transform: scale(1.02); }
   100% { transform: scale(1); }
 }
 
@@ -522,81 +541,81 @@ body {
 
 /* Glass cards — respiración gelatinosa sutil */
 .glass {
-  animation: jelly-breathe 4s ease-in-out infinite;
+  animation: jelly-breathe 7s ease-in-out infinite;
   will-change: transform;
 }
 /* Stagger para múltiples glass cards hermanas */
-.glass:nth-child(2) { animation-delay: 0.3s; }
-.glass:nth-child(3) { animation-delay: 0.6s; }
-.glass:nth-child(4) { animation-delay: 0.9s; }
-.glass:nth-child(5) { animation-delay: 1.2s; }
-.glass:nth-child(6) { animation-delay: 1.5s; }
+.glass:nth-child(2) { animation-delay: 0.8s; }
+.glass:nth-child(3) { animation-delay: 1.6s; }
+.glass:nth-child(4) { animation-delay: 2.4s; }
+.glass:nth-child(5) { animation-delay: 3.2s; }
+.glass:nth-child(6) { animation-delay: 4s; }
 
 /* Interactive glass cards — morph más pronunciado */
 .glass-liquid {
-  animation: jelly-morph 3.5s ease-in-out infinite;
+  animation: jelly-morph 6s ease-in-out infinite;
 }
-.glass-liquid:nth-child(2) { animation-delay: 0.4s; }
-.glass-liquid:nth-child(3) { animation-delay: 0.8s; }
+.glass-liquid:nth-child(2) { animation-delay: 1.2s; }
+.glass-liquid:nth-child(3) { animation-delay: 2.4s; }
 
 /* Botones — morph gelatinoso */
 .btn-primary {
-  animation: jelly-morph 3s ease-in-out infinite;
+  animation: jelly-morph 5s ease-in-out infinite;
 }
 .btn-glass {
-  animation: jelly-breathe 3.5s ease-in-out infinite;
+  animation: jelly-breathe 6s ease-in-out infinite;
 }
 .btn-success {
-  animation: jelly-morph 3.2s ease-in-out infinite;
+  animation: jelly-morph 5.5s ease-in-out infinite;
 }
 .btn-danger {
-  animation: jelly-morph 3.2s ease-in-out infinite;
+  animation: jelly-morph 5.5s ease-in-out infinite;
 }
 .btn-ghost {
-  animation: jelly-ripple 4s ease-in-out infinite;
+  animation: jelly-ripple 7s ease-in-out infinite;
 }
 
 /* Inputs — respiración muy sutil */
 .input-glass {
-  animation: jelly-breathe 5s ease-in-out infinite;
+  animation: jelly-breathe 8s ease-in-out infinite;
 }
-.input-glass:nth-child(2) { animation-delay: 0.5s; }
-.input-glass:nth-child(3) { animation-delay: 1s; }
+.input-glass:nth-child(2) { animation-delay: 1.5s; }
+.input-glass:nth-child(3) { animation-delay: 3s; }
 .input-glass:focus {
-  animation: jelly-morph 2s ease-in-out infinite;
+  animation: jelly-morph 4s ease-in-out infinite;
 }
 
 /* Labels — wobble sutil */
 .label-glass {
-  animation: jelly-wobble 6s ease-in-out infinite;
+  animation: jelly-wobble 9s ease-in-out infinite;
 }
 
 /* Nav items — ripple gelatinoso */
 .nav-item {
-  animation: jelly-ripple 3s ease-in-out infinite;
+  animation: jelly-ripple 6s ease-in-out infinite;
   will-change: transform;
 }
 .nav-item:nth-child(1) { animation-delay: 0s; }
-.nav-item:nth-child(2) { animation-delay: 0.4s; }
-.nav-item:nth-child(3) { animation-delay: 0.8s; }
-.nav-item:nth-child(4) { animation-delay: 1.2s; }
+.nav-item:nth-child(2) { animation-delay: 1.5s; }
+.nav-item:nth-child(3) { animation-delay: 3s; }
+.nav-item:nth-child(4) { animation-delay: 4.5s; }
 
 /* H1, H2 — jello sutil */
 h1 {
-  animation: jelly-jello 5s ease-in-out infinite;
+  animation: jelly-jello 8s ease-in-out infinite;
   will-change: transform;
 }
 h2 {
-  animation: jelly-wobble 5.5s ease-in-out infinite;
+  animation: jelly-wobble 9s ease-in-out infinite;
   will-change: transform;
 }
 h3 {
-  animation: jelly-wobble 6s ease-in-out infinite;
+  animation: jelly-wobble 10s ease-in-out infinite;
 }
 
 /* Links — ripple on idle, jiggle on hover */
 a {
-  animation: jelly-ripple 4s ease-in-out infinite;
+  animation: jelly-ripple 7s ease-in-out infinite;
   will-change: transform;
 }
 a:hover {
@@ -605,7 +624,7 @@ a:hover {
 
 /* Iconos Lucide — wobble sutil */
 .lucide {
-  animation: jelly-wobble 4.5s ease-in-out infinite;
+  animation: jelly-wobble 8s ease-in-out infinite;
   will-change: transform;
 }
 
@@ -628,28 +647,28 @@ a:hover {
 
 /* Texto gradiente — jello sutil */
 .text-gradient-purple {
-  animation: jelly-jello 4s ease-in-out infinite;
+  animation: jelly-jello 7s ease-in-out infinite;
 }
 .text-gradient-cyan {
-  animation: jelly-jello 4.5s ease-in-out infinite;
+  animation: jelly-jello 8s ease-in-out infinite;
 }
 
 /* --- Clases utilitarias de gelatina --- */
 
-.jelly-breathe { animation: jelly-breathe 4s ease-in-out infinite; will-change: transform; }
-.jelly-breathe-slow { animation: jelly-breathe 6s ease-in-out infinite; will-change: transform; }
-.jelly-wobble { animation: jelly-wobble 3.5s ease-in-out infinite; will-change: transform; }
-.jelly-morph { animation: jelly-morph 3s ease-in-out infinite; will-change: transform; }
-.jelly-jello { animation: jelly-jello 3s ease-in-out infinite; will-change: transform; }
-.jelly-ripple { animation: jelly-ripple 3s ease-in-out infinite; will-change: transform; }
-.jelly-float { animation: jelly-float 4s ease-in-out infinite; will-change: transform; }
-.jelly-glow { animation: jelly-glow 3s ease-in-out infinite; will-change: transform; }
-.jelly-settle { animation: jelly-settle 0.6s var(--ease-jelly) both; }
+.jelly-breathe { animation: jelly-breathe 7s ease-in-out infinite; will-change: transform; }
+.jelly-breathe-slow { animation: jelly-breathe 10s ease-in-out infinite; will-change: transform; }
+.jelly-wobble { animation: jelly-wobble 6s ease-in-out infinite; will-change: transform; }
+.jelly-morph { animation: jelly-morph 5.5s ease-in-out infinite; will-change: transform; }
+.jelly-jello { animation: jelly-jello 5.5s ease-in-out infinite; will-change: transform; }
+.jelly-ripple { animation: jelly-ripple 6s ease-in-out infinite; will-change: transform; }
+.jelly-float { animation: jelly-float 7s ease-in-out infinite; will-change: transform; }
+.jelly-glow { animation: jelly-glow 5.5s ease-in-out infinite; will-change: transform; }
+.jelly-settle { animation: jelly-settle 1s var(--ease-jelly) both; }
 
 /* Variaciones de velocidad */
-.jelly-fast { animation-duration: 2s !important; }
-.jelly-slow { animation-duration: 6s !important; }
-.jelly-subtle { animation-duration: 8s !important; }
+.jelly-fast { animation-duration: 3.5s !important; }
+.jelly-slow { animation-duration: 10s !important; }
+.jelly-subtle { animation-duration: 14s !important; }
 
 /* Stagger delays para grupos */
 .jelly-d1 { animation-delay: 0.1s; }
@@ -665,53 +684,53 @@ a:hover {
 
 /* Glass hover — lift + glow + jiggle */
 .glass:hover {
-  animation: jelly-jiggle 0.5s ease-in-out, jelly-breathe 2s ease-in-out infinite;
+  animation: jelly-jiggle 1.2s ease-in-out, jelly-breathe 5s ease-in-out infinite;
   transform: translateY(-3px) scale(1.015);
   box-shadow:
     0 12px 40px rgba(0,0,0,0.5),
     0 0 16px rgba(155, 92, 255, 0.15),
     inset 0 1px 0 rgba(255, 255, 255, 0.2);
   border-color: rgba(255, 255, 255, 0.22);
-  transition: transform 0.35s var(--ease-jelly), box-shadow 0.35s var(--ease-smooth), border-color 0.35s var(--ease-quick);
+  transition: transform 0.7s var(--ease-jelly), box-shadow 0.7s var(--ease-smooth), border-color 0.7s var(--ease-quick);
 }
 
 /* Grid stat tiles hover — bounce up */
 .grid > .glass:hover {
-  animation: jelly-jiggle 0.4s ease-in-out, jelly-breathe 2s ease-in-out infinite;
-  transform: translateY(-4px) scale(1.025);
+  animation: jelly-jiggle 1s ease-in-out, jelly-breathe 5s ease-in-out infinite;
+  transform: translateY(-5px) scale(1.025);
   box-shadow:
     0 16px 48px rgba(0,0,0,0.55),
     0 0 20px rgba(155, 92, 255, 0.25),
     inset 0 1px 0 rgba(255, 255, 255, 0.25);
-  transition: transform 0.4s var(--ease-jelly), box-shadow 0.4s var(--ease-smooth);
+  transition: transform 0.8s var(--ease-jelly), box-shadow 0.8s var(--ease-smooth);
 }
 
 /* Botones hover — jello + glow boost */
 .btn-primary:hover {
-  animation: jelly-jello 0.6s ease-in-out, jelly-morph 2s ease-in-out infinite;
-  transform: translateY(-2px) scale(1.03);
+  animation: jelly-jello 1.4s ease-in-out, jelly-morph 5s ease-in-out infinite;
+  transform: translateY(-3px) scale(1.04);
   box-shadow:
     0 8px 28px rgba(155, 92, 255, 0.6),
     0 0 32px rgba(155, 92, 255, 0.3),
     inset 0 1px 0 rgba(255, 255, 255, 0.4);
   filter: brightness(1.08);
-  transition: transform 0.35s var(--ease-jelly), box-shadow 0.35s var(--ease-smooth), filter 0.35s var(--ease-quick);
+  transition: transform 0.7s var(--ease-jelly), box-shadow 0.7s var(--ease-smooth), filter 0.7s var(--ease-quick);
 }
 .btn-glass:hover {
-  animation: jelly-jiggle 0.4s ease-in-out, jelly-breathe 2.5s ease-in-out infinite;
+  animation: jelly-jiggle 1s ease-in-out, jelly-breathe 6s ease-in-out infinite;
   transform: translateY(-2px) scale(1.02);
   background: rgba(255, 255, 255, 0.12);
   box-shadow:
     0 8px 28px rgba(0,0,0,0.45),
     0 0 12px rgba(155, 92, 255, 0.15),
     inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  transition: transform 0.35s var(--ease-jelly), box-shadow 0.35s var(--ease-smooth), background 0.35s var(--ease-quick);
+  transition: transform 0.7s var(--ease-jelly), box-shadow 0.7s var(--ease-smooth), background 0.7s var(--ease-quick);
 }
 .btn-success:hover {
   transform: translateY(-2px) scale(1.03);
   box-shadow: 0 8px 28px rgba(0, 255, 133, 0.5), 0 0 24px rgba(0, 255, 133, 0.2);
   filter: brightness(1.08);
-  transition: transform 0.35s var(--ease-jelly), box-shadow 0.35s var(--ease-smooth), filter 0.35s var(--ease-quick);
+  transition: transform 0.7s var(--ease-jelly), box-shadow 0.7s var(--ease-smooth), filter 0.7s var(--ease-quick);
 }
 .btn-danger:hover {
   transform: translateY(-2px) scale(1.03);
@@ -720,58 +739,58 @@ a:hover {
   transition: transform 0.35s var(--ease-jelly), box-shadow 0.35s var(--ease-smooth), filter 0.35s var(--ease-quick);
 }
 .btn-ghost:hover {
-  animation: jelly-jiggle 0.35s ease-in-out, jelly-ripple 2.5s ease-in-out infinite;
+  animation: jelly-jiggle 0.9s ease-in-out, jelly-ripple 6s ease-in-out infinite;
   transform: translateY(-1px) scale(1.02);
   color: var(--text-primary);
-  transition: transform 0.3s var(--ease-jelly), color 0.2s var(--ease-quick);
+  transition: transform 0.6s var(--ease-jelly), color 0.4s var(--ease-quick);
 }
 
 /* Input hover — subtle lift + glow */
 .input-glass:hover {
-  animation: jelly-morph 2.5s ease-in-out infinite;
+  animation: jelly-morph 5s ease-in-out infinite;
   border-color: rgba(155, 92, 255, 0.35);
   background: rgba(255, 255, 255, 0.06);
   box-shadow: 0 0 0 3px rgba(155, 92, 255, 0.08);
-  transition: border-color 0.3s var(--ease-quick), background 0.3s var(--ease-quick), box-shadow 0.3s var(--ease-quick);
+  transition: border-color 0.6s var(--ease-quick), background 0.6s var(--ease-quick), box-shadow 0.6s var(--ease-quick);
 }
 
 /* Input focus — morph más pronunciado */
 .input-glass:focus {
-  animation: jelly-morph 2.5s ease-in-out infinite;
+  animation: jelly-morph 5s ease-in-out infinite;
 }
 
 /* Links hover — jiggle + color shift */
 a:hover {
-  animation: jelly-jiggle 0.4s ease-in-out;
+  animation: jelly-jiggle 1s ease-in-out;
   transform: translateY(-1px);
-  transition: transform 0.3s var(--ease-jelly), color 0.2s var(--ease-quick);
+  transition: transform 0.6s var(--ease-jelly), color 0.4s var(--ease-quick);
 }
 
 /* Icon containers hover — bounce */
 [class*="items-center"][class*="justify-center"][class*="rounded-2xl"]:hover {
-  animation: jelly-jiggle 0.4s ease-in-out, jelly-wobble 3s ease-in-out infinite;
+  animation: jelly-jiggle 1s ease-in-out, jelly-wobble 7s ease-in-out infinite;
   transform: scale(1.08) translateY(-2px);
-  transition: transform 0.35s var(--ease-jelly);
+  transition: transform 0.7s var(--ease-jelly);
 }
 [class*="items-center"][class*="justify-center"][class*="rounded-xl"]:hover {
-  animation: jelly-jiggle 0.4s ease-in-out, jelly-wobble 3.5s ease-in-out infinite;
+  animation: jelly-jiggle 1s ease-in-out, jelly-wobble 8s ease-in-out infinite;
   transform: scale(1.1) translateY(-2px);
-  transition: transform 0.35s var(--ease-jelly);
+  transition: transform 0.7s var(--ease-jelly);
 }
 
 /* Chips/badges hover */
 .rounded-full:hover {
-  animation: jelly-jiggle 0.35s ease-in-out, jelly-ripple 2.5s ease-in-out infinite;
+  animation: jelly-jiggle 0.9s ease-in-out, jelly-ripple 6s ease-in-out infinite;
   transform: scale(1.06) translateY(-1px);
-  transition: transform 0.3s var(--ease-jelly);
+  transition: transform 0.6s var(--ease-jelly);
 }
 
 /* Labels hover */
 .label-glass:hover {
-  animation: jelly-jiggle 0.3s ease-in-out, jelly-wobble 4s ease-in-out infinite;
+  animation: jelly-jiggle 0.8s ease-in-out, jelly-wobble 9s ease-in-out infinite;
   transform: translateX(3px);
   color: var(--text-primary);
-  transition: transform 0.3s var(--ease-jelly), color 0.2s var(--ease-quick);
+  transition: transform 0.6s var(--ease-jelly), color 0.4s var(--ease-quick);
 }
 
 /* Text with opacity — subtle float on hover */
@@ -779,7 +798,7 @@ a:hover {
   animation: none;
   transform: translateY(-1px);
   color: rgba(255, 255, 255, 0.65);
-  transition: transform 0.3s var(--ease-smooth), color 0.3s var(--ease-quick);
+  transition: transform 0.6s var(--ease-smooth), color 0.6s var(--ease-quick);
 }
 .text-white\/30:hover {
   animation: none;
@@ -795,19 +814,19 @@ a:hover {
 
 /* Nav items hover — enhanced */
 .nav-item:hover {
-  animation: jelly-jiggle 0.35s ease-in-out, jelly-ripple 2s ease-in-out infinite;
+  animation: jelly-jiggle 0.9s ease-in-out, jelly-ripple 6s ease-in-out infinite;
 }
 
 /* Select dropdowns hover */
 select.input-glass:hover {
-  animation: jelly-morph 3s ease-in-out infinite;
+  animation: jelly-morph 7s ease-in-out infinite;
   border-color: rgba(155, 92, 255, 0.35);
-  transition: border-color 0.3s var(--ease-quick);
+  transition: border-color 0.6s var(--ease-quick);
 }
 
 /* Lucide icons — glow on parent hover */
 .lucide {
-  transition: transform 0.3s var(--ease-jelly), filter 0.3s var(--ease-quick);
+  transition: transform 0.6s var(--ease-jelly), filter 0.6s var(--ease-quick);
 }
 :hover > .lucide {
   filter: drop-shadow(0 0 4px rgba(155, 92, 255, 0.5));
@@ -817,74 +836,74 @@ select.input-glass:hover {
 
 /* Logo icon — jello más pronunciado */
 .animate-pulse-glow {
-  animation: pulse-glow 3s ease-in-out infinite, jelly-jello 3s ease-in-out infinite !important;
+  animation: pulse-glow 5s ease-in-out infinite, jelly-jello 3s ease-in-out infinite !important;
 }
 
 /* Avatar — wobble */
 [class*="rounded-full"][class*="font-extrabold"] {
-  animation: jelly-wobble 4s ease-in-out infinite;
+  animation: jelly-wobble 7s ease-in-out infinite;
   will-change: transform;
 }
 
 /* Chips/badges — ripple */
 .rounded-full {
-  animation: jelly-ripple 3.5s ease-in-out infinite;
+  animation: jelly-ripple 6s ease-in-out infinite;
   will-change: transform;
 }
 
 /* Progress bar — morph sutil */
 .rounded-full > .rounded-full {
-  animation: jelly-morph 4s ease-in-out infinite;
+  animation: jelly-morph 7s ease-in-out infinite;
 }
 
 /* Bottom nav container — breathe */
 nav > .glass {
-  animation: jelly-breathe 5s ease-in-out infinite;
+  animation: jelly-breathe 8s ease-in-out infinite;
 }
 
 /* Nav pill indicator — jello */
 nav .absolute.rounded-2xl {
-  animation: jelly-jello 3s ease-in-out infinite;
+  animation: jelly-jello 5s ease-in-out infinite;
   will-change: transform;
 }
 
 /* Error message — jello settle in */
 .text-neon-pink[class*="rounded-2xl"] {
-  animation: jelly-settle 0.5s var(--ease-jelly) both, jelly-wobble 4s ease-in-out infinite;
+  animation: jelly-settle 0.8s var(--ease-jelly) both, jelly-wobble 7s ease-in-out infinite;
 }
 
 /* Emoji/icon containers — wobble */
 [class*="items-center"][class*="justify-center"][class*="rounded-2xl"] {
-  animation: jelly-wobble 4s ease-in-out infinite;
+  animation: jelly-wobble 7s ease-in-out infinite;
   will-change: transform;
 }
 [class*="items-center"][class*="justify-center"][class*="rounded-xl"] {
-  animation: jelly-wobble 4.5s ease-in-out infinite;
+  animation: jelly-wobble 8s ease-in-out infinite;
   will-change: transform;
 }
 
 /* Stat tiles — breathe con stagger */
 .grid > .glass {
-  animation: jelly-breathe 3.5s ease-in-out infinite;
+  animation: jelly-breathe 6s ease-in-out infinite;
 }
 .grid > .glass:nth-child(1) { animation-delay: 0s; }
-.grid > .glass:nth-child(2) { animation-delay: 0.3s; }
-.grid > .glass:nth-child(3) { animation-delay: 0.6s; }
-.grid > .glass:nth-child(4) { animation-delay: 0.9s; }
+.grid > .glass:nth-child(2) { animation-delay: 1s; }
+.grid > .glass:nth-child(3) { animation-delay: 2s; }
+.grid > .glass:nth-child(4) { animation-delay: 3s; }
 
 /* Select dropdowns — morph */
 select.input-glass {
-  animation: jelly-morph 4s ease-in-out infinite;
+  animation: jelly-morph 7s ease-in-out infinite;
 }
 
 /* Disclaimer/age text — float sutil */
 .text-white\/30 {
-  animation: jelly-float 5s ease-in-out infinite;
+  animation: jelly-float 8s ease-in-out infinite;
 }
 
 /* Subtitle text — float sutil */
 .text-white\/50 {
-  animation: jelly-float 6s ease-in-out infinite;
+  animation: jelly-float 9s ease-in-out infinite;
 }
 
 /* ============================================================

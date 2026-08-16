@@ -178,22 +178,22 @@ export function GlassCard({
       onClick={onClick}
       {...liquid.handlers}
       whileHover={{
-        scale: 1.02,
-        y: -2,
-        boxShadow: '0 12px 40px rgba(0,0,0,0.5), 0 0 20px rgba(155,92,255,0.2)',
+        scale: 1.025,
+        y: -3,
+        boxShadow: '0 14px 44px rgba(0,0,0,0.55), 0 0 24px rgba(155,92,255,0.25)',
       }}
       animate={{
         ...liquid.motionStyle,
-        // Jelly idle oscillation when not pressed
+        // Jelly idle oscillation when not pressed — slower and more visible
         ...(liquid.state.isPressed ? {} : {
-          scaleX: [1, 1.006, 0.994, 1.003, 1],
-          scaleY: [1, 0.994, 1.006, 0.997, 1],
+          scaleX: [1, 1.015, 0.985, 1.01, 0.99, 1],
+          scaleY: [1, 0.985, 1.015, 0.99, 1.01, 1],
         }),
       }}
       transition={liquid.state.isPressed
         ? liquid.motionStyle.transition
         : {
-            duration: 3.5,
+            duration: 6,
             repeat: Infinity,
             ease: 'easeInOut',
           }
